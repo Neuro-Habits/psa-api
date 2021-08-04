@@ -1,0 +1,206 @@
+org: neurohabits
+app: nh-psa
+service: serverless-psa-api
+
+plugins:
+  - serverless-python-requirements
+custom:
+  stage: "${opt:stage, self:provider.stage}"
+  pythonRequirements:
+    dockerizePip: true
+
+package:
+  exclude:
+    - node_modules/**
+    - env/**
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: dev
+  region: eu-central-1
+  lambdaHashingVersion: 20201221
+  environment:
+    DOMAIN_SUFFIX: psa
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - "ses:SendRawEmail"
+      Resource:
+        "*"
+
+functions:
+  hello:
+    handler: app.hello
+    events:
+      - http:
+          path: /
+          method: get
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+  extract_form_data:
+    handler: app.extract_form_data
+    events:
+      - http:
+          path: /extract_form_data
+          method: post
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+  construct_df_from_form_data:
+    handler: app.construct_df_from_form_data
+    events:
+      - http:
+          path: /construct_df_from_form_data
+          method: get
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+  # list_sheet_files:
+  #   handler: app.list_sheet_files
+  #   events:
+  #     - http:
+  #         path: /list_sheet_files
+  #         method: get
+  #         cors: true
+  #         authorizer:
+  #           type: COGNITO_USER_POOLS
+  #           authorizerId:
+  #             Ref: ApiGatewayAuthorizer  
+  generate_scores:
+    handler: app.generate_scores
+    events:
+      - http:
+          path: /generate_scores
+          method: post
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+  generate_pdfs:
+    handler: app.generate_pdfs
+    events:
+      - http:
+          path: /generate_pdfs
+          method: post
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+  send_emails:
+    handler: app.send_emails
+    events:
+      - http:
+          path: /send_emails
+          method: post
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+  selfscan_cron:
+    handler: app.selfscan_cron
+    events:
+      - http:
+          path: /selfscan_cron
+          method: post
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+      - schedule: 
+          rate: rate(10 minutes)
+          enabled: true
+
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+    ApiGatewayAuthorizer:
+      DependsOn:
+        - ApiGatewayRestApi
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: cognito-authorizer
+        IdentitySource: method.request.header.Authorization
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - Fn::GetAtt: [CognitoUserPool, Arn]
+    CognitoUserPool:
+      Type: "AWS::Cognito::UserPool"
+      Properties:
+        MfaConfiguration: OFF
+        UserPoolName: nh-user-pool-${opt:stage, self:provider.stage}
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 6
+            RequireLowercase: False
+            RequireNumbers: True
+            RequireSymbols: False
+            RequireUppercase: True
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: True
+    CognitoUserPoolClient:
+      Type: "AWS::Cognito::UserPoolClient"
+      Properties:
+        ClientName: nh-user-pool-client-${opt:stage, self:provider.stage}
+        AllowedOAuthFlows:
+          - implicit
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthScopes:
+          - phone
+          - email
+          - openid
+          - profile
+          - aws.cognito.signin.user.admin
+        GenerateSecret: False
+        CallbackURLs: 
+          - https://psa.neurohabits.nl/
+        ExplicitAuthFlows:
+          - ALLOW_USER_SRP_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        SupportedIdentityProviders: 
+          - COGNITO
+        UserPoolId:
+          Ref: CognitoUserPool
+    CognitoUserPoolDomain:
+      Type: AWS::Cognito::UserPoolDomain 
+      Properties:
+        UserPoolId: 
+          Ref: CognitoUserPool
+        Domain: nh-user-pool-domain-${opt:stage, self:provider.stage}-${self:provider.environment.DOMAIN_SUFFIX}
+    UserPoolUICustomization: 
+      Type: AWS::Cognito::UserPoolUICustomizationAttachment 
+      Properties: 
+        UserPoolId: 
+          Ref: CognitoUserPool
+        ClientId:
+          Ref: CognitoUserPoolClient
+        CSS: ".banner-customizable { 
+          background-size: contain;
+          background-repeat: no-repeat;
+          margin: 30px; 
+        }"
