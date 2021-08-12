@@ -1,0 +1,23 @@
+name: serverless deploy dev
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    name: Deployment
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Python
+      uses: actions/setup-python@v2.2.2
+      with:
+        python-version: 3.8
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install SLS Python plugin and deploy
+      uses: serverless/github-action@v1.53.0
+      with:
+        args: -c "serverless plugin install -n serverless-python-requirements && serverless deploy --stage='dev' --verbose"
+        entrypoint: /bin/bash
+      env:
+        SLS_DEBUG: 1
