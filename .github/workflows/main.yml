@@ -1,0 +1,17 @@
+name: psa
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: python:latest
+    steps:
+      - run: npm config set prefix /usr/local
+      - run: npm install -g serverless
+      - run: serverless deploy --stage production --verbose
