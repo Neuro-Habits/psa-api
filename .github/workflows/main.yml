@@ -8,13 +8,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
+    name: deploy
     runs-on: ubuntu-latest
-    container: python:latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+        node-version: [14.x]
     steps:
-      - name: Serverless
-        # You may pin to the exact commit or the version.
-        # uses: serverless/github-action@8f96a6db886d4ce30c6063dd9919a8a1a4a6d9cf
-        uses: serverless/github-action@v1.53.0
-      - run: serverless plugin install -n serverless-python-requirements
-      - run: serverless deploy --verbose
+    - uses: actions/checkout@v2
+    - name: Use Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2.2.2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - name: serverless deploy
+      uses: serverless/github-action@master
+      with:
+        args: deploy
