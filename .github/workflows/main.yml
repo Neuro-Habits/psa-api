@@ -16,3 +16,7 @@ jobs:
         # You may pin to the exact commit or the version.
         # uses: serverless/github-action@8f96a6db886d4ce30c6063dd9919a8a1a4a6d9cf
         uses: serverless/github-action@v1.53.0
+        with:
+          command:
+            serverless plugin install -n serverless-python-requirements
+            serverless deploy --verbose
