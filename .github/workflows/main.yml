@@ -20,4 +20,5 @@ jobs:
       - run: npm install
       - run: npm test
       - run: npm install -g serverless
+      - run: npm install fs-extra
       - run: serverless deploy --verbose
