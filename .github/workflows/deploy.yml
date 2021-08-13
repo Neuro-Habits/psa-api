@@ -1,32 +1,30 @@
-name: Deploy Dev
+name: Deploy
 on:
   push:
     branches:
       - main
 jobs:
-  deploy-dev:
+  deploy:
+    name: Deployment
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        stages:
+          - stage: 'dev'
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY }}
+          - stage: 'prod'
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY }}
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install VPC Plugin and Deploy
+      uses: serverless/github-action@v1.53.0
       with:
-        node-version: '14.x'
-    - name: Install Serverless Framework
-      run: npm install -g serverless
-    - name: Serverless AWS authentication
-      run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
-    - name: Create env file
-      run: | # cp sample.env.yml env.yml
-        cat > env.yml << EOF
-        ${{ secrets.ENV }}
-        EOF
-    - name: Install NPM dependencies
-      run: npm install
-    # Optional
-    #- name: Build assets
-    #  run: npm run assets-dev
-    - name: Deploy Lambda functions
-      run: sls deploy -s dev
-    # Optional (to use with serverless-finch serverless plugin)
-    #- name: Deploy assets to S3
-    #  run: sls client deploy --no-delete-contents --no-confirm -s dev
+        args: -c "serverless plugin install --name serverless-python-requirements && serverless deploy --stage=${{ matrix.stages.stage }} --verbose"
+        entrypoint: /bin/bash
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets[matrix.stages.AWS_ACCESS_KEY_ID] }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets[matrix.stages.AWS_SECRET_ACCESS_KEY] }}
+        SLS_DEBUG: 1
