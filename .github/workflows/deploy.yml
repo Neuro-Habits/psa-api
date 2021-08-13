@@ -7,24 +7,15 @@ jobs:
   deploy:
     name: Deployment
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        stages:
-          - stage: 'dev'
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY }}
-          - stage: 'prod'
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Install VPC Plugin and Deploy
       uses: serverless/github-action@v1.53.0
       with:
-        args: -c "serverless plugin install --name serverless-python-requirements && serverless deploy --stage=${{ matrix.stages.stage }} --verbose"
+        args: -c "serverless plugin install --name serverless-python-requirements && serverless deploy --verbose"
         entrypoint: /bin/bash
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets[matrix.stages.AWS_ACCESS_KEY_ID] }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets[matrix.stages.AWS_SECRET_ACCESS_KEY] }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
         SLS_DEBUG: 1
