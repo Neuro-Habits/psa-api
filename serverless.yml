@@ -7,8 +7,7 @@ plugins:
 custom:
   stage: "${opt:stage, self:provider.stage}"
   pythonRequirements:
-    zip: true
-    slim: true
+    dockerizePip: true
 
 package:
   exclude:
