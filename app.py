@@ -1,12 +1,14 @@
 import boto3
 import os
 import numpy as np
+from collections import defaultdict
 
 from lambda_decorators import cors_headers
 
 import pandas as pd
 
 from Person import *
+from Form import *
 from function import *
 
 import json
@@ -17,6 +19,9 @@ import base64
 from datetime import datetime, timezone
 from pathlib import Path
 
+from collections import defaultdict
+from types import SimpleNamespace
+
 headers = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': True,
@@ -24,6 +29,13 @@ headers = {
     }
 
 auth = {'Authorization': 'Bearer '+ config.access_key}
+
+general_prefix = "/"
+api_prefix = ""
+
+MIN_SCORE = 1
+MAX_SCORE = 10
+CRON_MINS = 10
 
 @cors_headers
 def hello(event, context):
@@ -37,7 +49,6 @@ def hello(event, context):
 def extract_form_data(event, context):
     form_id = json.loads(event)
     form_id = form_id['form_id']
-    print(form_id)
     
     responses = requests.get(config.base_url+"/forms/"+form_id+"/responses", headers=auth)
     form = requests.get(config.base_url+"/forms/"+form_id, headers=auth)
@@ -64,9 +75,14 @@ def construct_df_from_form_data(event, context):
     frm = data['form_data']
     resp = data['response_data']
     
+    form = Form(frm['title'])
+    
     cols = []
     rows = []
 
+    opinion_fields = [field for field in frm['fields'] if field['type'] == 'opinion_scale']    
+    total_score = sum((field['properties']['steps']-1) if field['properties']['start_at_one'] else field['properties']['steps'] for field in opinion_fields)
+    
     for col in frm['fields']:
         if col['type'] == "email":
             cols.append("email")
@@ -84,12 +100,26 @@ def construct_df_from_form_data(event, context):
         rows.append(row)
     
     df = pd.DataFrame(rows, columns=cols)
-    json_df = df.to_dict(orient="records")
+    json_df = df.to_dict(orient="dict")
+    
+    dd = defaultdict(list)
+    calculated_tuple = tuple(item['calculated'] for item in resp['items'])
+        
+    for d in calculated_tuple:
+        for key, value in d.items():
+            dd[key].append(value)
+    
+    response = {
+        'dataframe':json_df,
+        'calculated':dd,
+        'total_scores':total_score,
+        'form':json.dumps(form.__dict__)
+    }
     
     return {
         'statusCode': 200,
         'headers': headers,
-        'body': json.dumps(json_df)
+        'body': json.dumps(response)
     }
 
 # @cors_headers
@@ -119,8 +149,6 @@ def construct_df_from_form_data(event, context):
 
 @cors_headers
 def generate_scores(event, context):  
-    MAX_SCORERANGE = 5
-    MAX_SCORE = 10
     print("Starting score generation")
 
     data = event['body']
@@ -130,16 +158,14 @@ def generate_scores(event, context):
     # Construct basic dataset                               #
     #########################################################  
 
-    df = pd.DataFrame(data)
+    df = pd.DataFrame.from_dict(data['dataframe'])
 
     #########################################################
     # Create scores                                         #
     #########################################################  
-    
-    numeric_df = df.select_dtypes(include=[np.number])
-    
-    df['raw_score'] = numeric_df.sum(axis=1) / len(numeric_df.columns)
-    df['score'] = (df['raw_score']/MAX_SCORERANGE)*MAX_SCORE
+        
+    df['raw_score'] = data['calculated']['score']
+    df['score'] = (df['raw_score']/data['total_scores'])*MAX_SCORE
     df['score'] = np.round(df['score']).astype("int")
     
     df = df[['email','score']]
@@ -162,7 +188,7 @@ def generate_pdfs(event, context):
     
     personList = []
 
-    for person in data:
+    for person in data[:1]:
         personList.append(
             Person(email=person['email'],
                    score=person['score'])
@@ -173,14 +199,21 @@ def generate_pdfs(event, context):
     for person in personList: 
         result = {}
         
-        filepath = "/tmp/report.pdf"
-        generate_pdf_from_template(person, filepath)
+        in_filename = "Quickscan Stress.pdf"
+        out_filename = "Rapport Quickscan Stress.pdf"
+        
+        filepath = general_prefix+"tmp/"+out_filename
+        
+        print(person.score)
+        generate_pdf_from_template(person, filepath, api_prefix, in_filename, MIN_SCORE, MAX_SCORE)
+        print("Saved report at "+filepath)
 
         with open(filepath, "rb") as f:
             b = base64.b64encode(f.read()).decode("utf-8")
             
-        result['person'] = person.__dict__
+        result['person'] = json.dumps(person.__dict__)
         result['report'] = b
+        result['report_title'] = out_filename
         resultsList.append(result)
     
     pdf_headers = headers.copy()
@@ -198,19 +231,22 @@ def send_emails(event, context):
     data = event['body']
     data = json.loads(data)
             
-    for i,entity in enumerate(data):               
-        person = Person(entity['person']['email'])
+    for i,entity in enumerate(data):    
+#         person = Person(entity['person']['email'])
+        person = json.loads(entity['person'], object_hook=lambda d: SimpleNamespace(**d))
+        print(person)
         
-        filepath = "/tmp/report.pdf"
+        filepath = general_prefix+"tmp/"+entity['report_title']
         
-        sender = "sebastiaan@somnitas.com"
+        sender = "Neuro Habits <sebastiaan@somnitas.com>"
+        recipient = person.email
         aws_region = "eu-central-1"
         subject = "Uw Quickscan Stressrapport"
         
         with open(filepath, 'wb') as f:
             f.write(base64.b64decode(entity['report']))
             
-        send_mail_with_attachment(person, sender, aws_region, subject, filepath)
+        send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, person)
 
         mails_sent = i+1
 
@@ -244,7 +280,9 @@ def selfscan_cron(event, context):
             curr_time = datetime.now(timezone.utc)
 
             minutes_diff = (curr_time-submitted_time).total_seconds() / 60.0
-            if minutes_diff > 10:
+            if minutes_diff <= CRON_MINS:
+                print(minutes_diff)
+            else:
                 response_data['items'].remove(response)
         
         if len(response_data['items']) == 0:

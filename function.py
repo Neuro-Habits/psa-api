@@ -1,6 +1,8 @@
 import boto3
 from botocore.exceptions import ClientError
 import io
+import os
+import requests
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -34,6 +36,10 @@ from email.mime.text import MIMEText
             
 #     return creds
 
+def percentage_from_score(min_score, max_score, score):
+    perc = (score - min_score) / (max_score - min_score) * 100
+    return perc
+
 def uploadFile(service, filename):
     file_metadata = {
         'name': filename,
@@ -48,15 +54,32 @@ def uploadFile(service, filename):
     
     return file.get('id')
 
-def generate_pdf_from_template(person, out_pdf_file):
+def generate_pdf_from_template(person, out_pdf_file, api_prefix, in_filename, MIN_SCORE, MAX_SCORE):
+    from PyPDF2 import PdfFileWriter, PdfFileReader
+    import io
+    
+    SCORE_OFFSET = 270
+    
+    perc = percentage_from_score(MIN_SCORE, MAX_SCORE, person.score)
+    
+    OFFSET_FINAL = SCORE_OFFSET * (perc/100)
+    
+    # read the existing PDF
+    in_pdf_file = api_prefix+'report_templates/stress_quickscan/'+in_filename
+    
+    existing_pdf = PdfFileReader(open(in_pdf_file, "rb"))
+    existing_pdf_pagesize = existing_pdf.getPage(0).mediaBox
+    output = PdfFileWriter()
+    
     def score(c):
-        c.setFont('Montserrat-Italic', 30)
-        c.setFillColorRGB(1, 1, 1)
-        c.rect(center_coords-4,630,cm,cm,fill=1, stroke=0)
-        c.setFillColorRGB(74/256, 97/256, 121/256)
-        c.drawCentredString(center_coords, PAGE_HEIGHT-212, str(person.score))
+        c.drawImage(api_prefix+"resources/images/marker.png",
+                    125+OFFSET_FINAL,
+                    613,
+                    height=32,
+                    mask='auto', 
+                    preserveAspectRatio=True) 
         
-    font_folder = str(Path("fonts"))
+    font_folder = str(Path(api_prefix, "fonts"))
     
     pdfmetrics.registerFont(TTFont('Montserrat-Regular', Path(font_folder,'Montserrat-Regular.ttf')))
     pdfmetrics.registerFont(TTFont('Montserrat-Italic', Path(font_folder,'Montserrat-Italic.ttf')))
@@ -65,18 +88,14 @@ def generate_pdf_from_template(person, out_pdf_file):
     PAGE_HEIGHT = defaultPageSize[1]
     
     center_coords = PAGE_WIDTH/2.0
-
-    from PyPDF2 import PdfFileWriter, PdfFileReader
-    import io
- 
-    in_pdf_file = 'report_templates/stress_quickscan/stress.pdf'
- 
+  
     packet = io.BytesIO()
-    c = canvas.Canvas(packet)
+    c = canvas.Canvas(packet, pagesize=(existing_pdf_pagesize.getWidth(),existing_pdf_pagesize.getHeight()))
 
     c.showPage()
     c.showPage()
     score(c)
+    c.showPage()
     c.showPage()
     c.showPage()
     c.showPage()
@@ -90,10 +109,6 @@ def generate_pdf_from_template(person, out_pdf_file):
  
     new_pdf = PdfFileReader(packet)
  
-    # read the existing PDF
-    existing_pdf = PdfFileReader(open(in_pdf_file, "rb"))
-    output = PdfFileWriter()
- 
     for i in range(len(existing_pdf.pages)):
         page = existing_pdf.getPage(i)
         page.mergePage(new_pdf.getPage(i))
@@ -103,39 +118,26 @@ def generate_pdf_from_template(person, out_pdf_file):
     output.write(outputStream)
     outputStream.close()
 
-def send_mail_with_attachment(person, sender, aws_region, subject, report_id):
+def send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, person):
+    link = "https://preview.mailerlite.com/o3u9q3"
+    f = requests.get(link)
+    
     # The email body for recipients with non-HTML email clients.
-    BODY_TEXT = "Beste,\r\nZie bijgevoegd het resultaat van uw PSA verzoek."
+    BODY_TEXT = ""
 
     # The HTML body of the email.
-    BODY_HTML = """\
-    <html>
-    <head></head>
-    <body>
-    <p>Beste,</p>
-    <p>Zie bijgevoegd het resultaat van uw PSA verzoek.</p>
-    </body>
-    </html>
-    """
+    BODY_HTML = f.text
 
-    # The character encoding for the email.
     CHARSET = "utf-8"
-
-    # Create a new SES resource and specify a region.
     client = boto3.client('ses',region_name=aws_region)
 
-    # Create a multipart/mixed parent container.
     msg = MIMEMultipart('mixed')
     # Add subject, from and to lines.
     msg['Subject'] = subject 
     msg['From'] = sender 
-    msg['To'] = person.email
+    msg['To'] = recipient
 
-    # Create a multipart/alternative child container.
     msg_body = MIMEMultipart('alternative')
-
-    # Encode the text and HTML content and set the character encoding. This step is
-    # necessary if you're sending a message with characters outside the ASCII range.
     textpart = MIMEText(BODY_TEXT.encode(CHARSET), 'plain', CHARSET)
     htmlpart = MIMEText(BODY_HTML.encode(CHARSET), 'html', CHARSET)
 
@@ -144,11 +146,14 @@ def send_mail_with_attachment(person, sender, aws_region, subject, report_id):
     msg_body.attach(htmlpart)
 
     # Define the attachment part and encode it using MIMEApplication.
-    att = MIMEApplication(open(report_id, 'rb').read())
+    att = MIMEApplication(open(filepath, 'rb').read())
 
-    # Add a header to tell the email client to treat this part as an attachment,
-    # and to give the attachment a name.
-    att.add_header('Content-Disposition','attachment',filename="stressrapport_quickscan.pdf")
+    att.add_header('Content-Disposition','attachment',filename=os.path.basename(filepath))
+
+    if os.path.exists(filepath):
+        print("File exists")
+    else:
+        print("File does not exists")
 
     # Attach the multipart/alternative child container to the multipart/mixed
     # parent container.
@@ -156,82 +161,22 @@ def send_mail_with_attachment(person, sender, aws_region, subject, report_id):
 
     # Add the attachment to the parent container.
     msg.attach(att)
+
     try:
         #Provide the contents of the email.
         response = client.send_raw_email(
-            Source=sender,
+            Source=msg['From'],
             Destinations=[
-                person.email
+                msg['To']
             ],
             RawMessage={
                 'Data':msg.as_string(),
             },
+            ConfigurationSetName="ConfigSet"
         )
     # Display an error if something goes wrong. 
     except ClientError as e:
         print(e.response['Error']['Message'])
     else:
-        print("Email sent to "+person.email+"! Message ID:"),
+        print("Email sent! Message ID:"),
         print(response['MessageId'])
-        
-def fill_page_with_image(path, canvas):
-    """
-    Given the path to an image and a reportlab canvas, fill the current page
-    with the image.
-    
-    This function takes into consideration EXIF orientation information (making
-    it compatible with photos taken from iOS devices).
-    
-    This function makes use of ``canvas.setPageRotation()`` and
-    ``canvas.setPageSize()`` which will affect subsequent pages, so be sure to
-    reset them to appropriate values after calling this function.
-    
-    :param   path: filesystem path to an image
-    :param canvas: ``reportlab.canvas.Canvas`` object
-    """
-    from PIL import Image
-
-    page_width, page_height = canvas._pagesize
-
-    image = Image.open(path)
-    image_width, image_height = image.size
-    if hasattr(image, '_getexif'):
-        orientation = image._getexif().get(274, 1)  # 274 = Orientation
-    else:
-        orientation = 1
-
-    # These are the possible values for the Orientation EXIF attribute:
-    ORIENTATIONS = {
-        1: "Horizontal (normal)",
-        2: "Mirrored horizontal",
-        3: "Rotated 180",
-        4: "Mirrored vertical",
-        5: "Mirrored horizontal then rotated 90 CCW",
-        6: "Rotated 90 CW",
-        7: "Mirrored horizontal then rotated 90 CW",
-        8: "Rotated 90 CCW",
-    }
-    draw_width, draw_height = page_width, page_height
-    if orientation == 1:
-        canvas.setPageRotation(0)
-    elif orientation == 3:
-        canvas.setPageRotation(180)
-    elif orientation == 6:
-        image_width, image_height = image_height, image_width
-        draw_width, draw_height = page_height, page_width
-        canvas.setPageRotation(90)
-    elif orientation == 8:
-        image_width, image_height = image_height, image_width
-        draw_width, draw_height = page_height, page_width
-        canvas.setPageRotation(270)
-    else:
-        raise ValueError("Unsupported image orientation '%s'."
-                         % ORIENTATIONS[orientation])
-
-    if image_width > image_height:
-        page_width, page_height = page_height, page_width  # flip width/height
-        draw_width, draw_height = draw_height, draw_width
-        canvas.setPageSize((page_width, page_height))
-
-    canvas.drawImage(path, 0, 0, width=draw_width, height=draw_height,
-                     preserveAspectRatio=True)
