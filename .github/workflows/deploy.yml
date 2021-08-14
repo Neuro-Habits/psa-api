@@ -12,14 +12,17 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
+        python-version: [3.8]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: setup-docker
-      uses: docker-practice/actions-setup-docker@v1
+    - name: Use Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2.2.2
+      with:
+        python-version: ${{ matrix.python-version }}
     - run: npm ci
     - name: serverless deploy
       uses: serverless/github-action@v2.18.0
