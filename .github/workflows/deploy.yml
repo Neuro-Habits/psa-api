@@ -9,23 +9,23 @@ jobs:
   deploy:
     name: deploy
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
-        python-version: [3.8]
+#     strategy:
+#       matrix:
+#         node-version: [14.x]
+#         python-version: [3.8]
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Use Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2.2.2
-      with:
-        python-version: ${{ matrix.python-version }}
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#         node-version: ${{ matrix.node-version }}
+#     - name: Use Python ${{ matrix.python-version }}
+#       uses: actions/setup-python@v2.2.2
+#       with:
+#         python-version: ${{ matrix.python-version }}
     - run: npm ci
     - name: serverless deploy
-      uses: serverless/github-action@v2.18.0
+      uses: PeaceDucko/github-action@master
       with:
         args: -c "serverless plugin install --name serverless-python-requirements && serverless deploy --verbose"
         entrypoint: /bin/sh
