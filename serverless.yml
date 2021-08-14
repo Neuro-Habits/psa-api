@@ -2,12 +2,12 @@ org: neurohabits
 app: nh-psa
 service: serverless-psa-api
 
-# plugins:
-#   - serverless-python-requirements
+plugins:
+  - serverless-python-requirements
 custom:
   stage: "${opt:stage, self:provider.stage}"
-  # pythonRequirements:
-  #   dockerizePip: true
+  pythonRequirements:
+    dockerizePip: true
 
 package:
   exclude:
