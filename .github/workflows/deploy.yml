@@ -19,6 +19,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
+    - name: Docker Setup QEMU
+      uses: docker/setup-qemu-action@v1.2.0
     - name: serverless deploy
       uses: serverless/github-action@v1
       with:
