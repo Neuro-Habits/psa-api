@@ -9,6 +9,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Node modules
+node_modules/
+
 # Secret files
 config.py
 credentials.json
