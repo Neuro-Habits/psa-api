@@ -13,7 +13,6 @@ from function import *
 
 import json
 import requests
-import config
 import base64
 
 from datetime import datetime, timezone
@@ -22,13 +21,22 @@ from pathlib import Path
 from collections import defaultdict
 from types import SimpleNamespace
 
+from decouple import config
+
 headers = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': True,
       'Content-Type':'application/json'
     }
 
-auth = {'Authorization': 'Bearer '+ config.access_key}
+try: # Fetch keys from .env file
+    TF_ACCESS_KEY = config("TF_ACCESS_KEY")
+    TF_BASE_URL = config("TF_BASE_URL")
+except: # Fetch keys from GitHub environmental variables
+    TF_ACCESS_KEY = os.getenv('TF_ACCESS_KEY')
+    TF_BASE_URL = os.getenv("TF_BASE_URL")
+
+auth = {'Authorization': 'Bearer '+ TF_ACCESS_KEY}
 
 general_prefix = "/"
 api_prefix = ""
@@ -50,8 +58,8 @@ def extract_form_data(event, context):
     form_id = json.loads(event)
     form_id = form_id['form_id']
     
-    responses = requests.get(config.base_url+"/forms/"+form_id+"/responses", headers=auth)
-    form = requests.get(config.base_url+"/forms/"+form_id, headers=auth)
+    responses = requests.get(TF_BASE_URL+"/forms/"+form_id+"/responses", headers=auth)
+    form = requests.get(TF_BASE_URL+"/forms/"+form_id, headers=auth)
     
     resp = json.loads(responses.content)
     frm = json.loads(form.content)
