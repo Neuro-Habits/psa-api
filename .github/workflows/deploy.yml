@@ -1,35 +1,26 @@
-name: Deploy
-
+name: Deploy Dev
 on:
   push:
     branches:
-      - main
-
+      - master
 jobs:
-  deploy:
-    name: deploy
+  deploy-dev:
     runs-on: ubuntu-latest
-#     strategy:
-#       matrix:
-#         node-version: [14.x]
-#         python-version: [3.8]
     steps:
-    - uses: actions/checkout@v2
-#     - name: Use Node.js ${{ matrix.node-version }}
-#       uses: actions/setup-node@v1
-#       with:
-#         node-version: ${{ matrix.node-version }}
-#     - name: Use Python ${{ matrix.python-version }}
-#       uses: actions/setup-python@v2.2.2
-#       with:
-#         python-version: ${{ matrix.python-version }}
-    - run: npm ci
-    - name: serverless deploy
-      uses: PeaceDucko/github-action@master
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
       with:
-        args: -c "python -m pip install --upgrade pip && serverless plugin install --name serverless-python-requirements && serverless deploy --verbose"
-        entrypoint: /bin/sh
-      env:
-        SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
+        node-version: '14.x'
+    - name: Install Serverless Framework
+      run: npm install -g serverless
+    - name: Install NPM dependencies
+      run: npm install
+    - name: Install Serverless Python Requirements plugin
+      run: sls plugin install -n serverless-python-requirements
+    - name: Serverless AWS authentication
+      run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
+    # Optional
+    #- name: Build assets
+    #  run: npm run assets-dev
+    - name: Deploy Lambda functions
+      run: sls deploy -s dev
