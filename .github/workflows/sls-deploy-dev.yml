@@ -25,9 +25,9 @@ jobs:
       uses: SpicyPizza/create-envfile@v1
       with:
         file_name: .env
-        directory: /github/home
-    - name: ls
-      run: ls
+#         directory: /github/home
+    - name: List all files
+      run: ls -a
     - name: Deploy Lambda functions
       run: sls deploy --stage dev
       env:
