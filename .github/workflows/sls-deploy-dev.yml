@@ -21,9 +21,11 @@ jobs:
       run: npm install
     - name: Serverless AWS authentication
       run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
+    - name: Create .env file
+      uses: SpicyPizza/create-envfile@v1.1
+    - name: ls
+      run: ls
     - name: Deploy Lambda functions
       run: sls deploy --stage dev
       env:
         SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-        TF_ACCESS_KEY: ${{ secrets.TF_ACCESS_KEY }}
-        TF_BASE_URL: ${{ secrets.TF_BASE_URL }}
