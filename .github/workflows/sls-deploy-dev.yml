@@ -24,7 +24,7 @@ jobs:
     - name: Make envfile
       uses: SpicyPizza/create-envfile@v1
       with:
-        file_name: .env
+        file_name: .envs
     - name: ls
       run: ls
     - name: Deploy Lambda functions
