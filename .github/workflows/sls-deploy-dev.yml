@@ -27,8 +27,6 @@ jobs:
         envkey_TF_BASE_URL: ${{ secrets.TF_BASE_URL }}
         envkey_TF_ACCESS_KEY: ${{ secrets.TF_ACCESS_KEY }}
         github_workspace: ${{ github.workspace }}
-    - name: List all files
-      run: ls -a
     - name: Deploy Lambda functions
       run: sls deploy --stage dev
       env:

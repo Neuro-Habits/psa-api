@@ -29,14 +29,8 @@ headers = {
       'Content-Type':'application/json'
     }
 
-try: # Fetch keys from .env file
-    print("Using local env variables")
-    TF_ACCESS_KEY = config("TF_ACCESS_KEY")
-    TF_BASE_URL = config("TF_BASE_URL")
-except: # Fetch keys from GitHub environmental variables
-    print("Using remote env variables")
-    TF_ACCESS_KEY = os.environ['TF_ACCESS_KEY']
-    TF_BASE_URL = os.environ["TF_BASE_URL"]
+TF_ACCESS_KEY = config("TF_ACCESS_KEY")
+TF_BASE_URL = config("TF_BASE_URL")
 
 auth = {'Authorization': 'Bearer '+ TF_ACCESS_KEY}
 
