@@ -22,10 +22,11 @@ jobs:
     - name: Serverless AWS authentication
       run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
     - name: Make envfile
-      uses: SpicyPizza/create-envfile@v1
+      uses: SpicyPizza/create-envfile@v1.1
       with:
-        file_name: .env
-#         directory: /github/home
+        envkey_TF_BASE_URL: ${{ secrets.TF_BASE_URL }}
+        envkey_TF_ACCESS_KEY: ${{ secrets.TF_ACCESS_KEY }}
+        github_workspace: ${{ github.workspace }}
     - name: List all files
       run: ls -a
     - name: Deploy Lambda functions
