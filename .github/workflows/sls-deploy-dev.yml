@@ -24,7 +24,9 @@ jobs:
     - name: Create .env file
       uses: SpicyPizza/create-envfile@v1.1
       with:
-        file_name: '.env'
+        envkey_TF_ACCESS_KEY: ${{ secrets.TF_ACCESS_KEY }}
+        envkey_TF_BASE_URL: ${{ secrets.TF_BASE_URL }}
+        file_name: .env
     - name: ls
       run: ls
     - name: Deploy Lambda functions
