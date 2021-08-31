@@ -58,14 +58,24 @@ def generate_pdf_from_template(person, out_pdf_file, api_prefix, in_filename, MI
     from PyPDF2 import PdfFileWriter, PdfFileReader
     import io
     
-    SCORE_OFFSET = 270
+    SCORE_OFFSET = 272
     
     perc = percentage_from_score(MIN_SCORE, MAX_SCORE, person.score)
     
     OFFSET_FINAL = SCORE_OFFSET * (perc/100)
+        
+    one_third = 100/3    
+    if perc <= one_third:
+        feedback_color = "green"
+    elif perc > one_third and perc <= one_third*2:
+        feedback_color = "yellow"
+    else:
+        feedback_color = "red"
+        
+    print(feedback_color)
     
     # read the existing PDF
-    in_pdf_file = api_prefix+'report_templates/stress_quickscan/'+in_filename
+    in_pdf_file = api_prefix+'report_templates/stress_quickscan/'+in_filename+'_'+feedback_color+'.pdf'
     
     existing_pdf = PdfFileReader(open(in_pdf_file, "rb"))
     existing_pdf_pagesize = existing_pdf.getPage(0).mediaBox
@@ -73,8 +83,8 @@ def generate_pdf_from_template(person, out_pdf_file, api_prefix, in_filename, MI
     
     def score(c):
         c.drawImage(api_prefix+"resources/images/marker.png",
-                    125+OFFSET_FINAL,
-                    613,
+                    130+OFFSET_FINAL,
+                    642.5,
                     height=32,
                     mask='auto', 
                     preserveAspectRatio=True) 
@@ -119,14 +129,17 @@ def generate_pdf_from_template(person, out_pdf_file, api_prefix, in_filename, MI
     outputStream.close()
 
 def send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, person):
-    link = "https://preview.mailerlite.com/o3u9q3"
+    link = "https://preview.mailerlite.com/i6e0h6"
     f = requests.get(link)
+
+    html_text = f.text
+    html_text = html_text.replace("Afmelden", "")
     
     # The email body for recipients with non-HTML email clients.
     BODY_TEXT = ""
 
     # The HTML body of the email.
-    BODY_HTML = f.text
+    BODY_HTML = html_text
 
     CHARSET = "utf-8"
     client = boto3.client('ses',region_name=aws_region)

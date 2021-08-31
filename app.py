@@ -199,8 +199,8 @@ def generate_pdfs(event, context):
     for person in personList: 
         result = {}
         
-        in_filename = "Quickscan Stress.pdf"
-        out_filename = "Rapport Quickscan Stress.pdf"
+        in_filename = "quickscan"
+        out_filename = "Rapport Quickscan.pdf"
         
         filepath = general_prefix+"tmp/"+out_filename
         
@@ -238,7 +238,7 @@ def send_emails(event, context):
         
         filepath = general_prefix+"tmp/"+entity['report_title']
         
-        sender = "Neuro Habits <sebastiaan@somnitas.com>"
+        sender = "Neuro Habits <info@neurohabits.nl>"
         recipient = person.email
         aws_region = "eu-central-1"
         subject = "Uw Quickscan Stressrapport"
@@ -262,7 +262,7 @@ def send_emails(event, context):
 
 @cors_headers
 def selfscan_cron(event, context):
-    form_ids = ['vOPz3zmu']
+    form_ids = ['vaXpvkUJ']
     mails_sent = []
     
     for form_id in form_ids:
