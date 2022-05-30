@@ -3,9 +3,10 @@ class Person():
                  email,
                  firstname=None,
                  lastname=None,
-                 score=None):
-        
+                 **kwargs):
+
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
-        self.score = score
+
+        self.__dict__.update(kwargs)

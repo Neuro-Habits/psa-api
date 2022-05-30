@@ -27,6 +27,8 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from collections import defaultdict
+
 # def authenticate(SCOPES):
 #     SECRET_FILENAME = 'client_secret.json'
 #     SERVICE_ACCOUNT_FILE = str(Path(Path().resolve(), SECRET_FILENAME))
@@ -39,6 +41,17 @@ from email.mime.text import MIMEText
 def percentage_from_score(min_score, max_score, score):
     perc = (score - min_score) / (max_score - min_score) * 100
     return perc
+
+def create_dict_with_lists(lst):
+    # using loop to get dictionaries
+    # defaultdict used to make default empty list
+    # for each key
+    res = defaultdict(list)
+    for sub in lst:
+        for key in sub:
+            res[key].append(sub[key])
+
+    return res
 
 def uploadFile(service, filename):
     file_metadata = {
@@ -54,82 +67,89 @@ def uploadFile(service, filename):
     
     return file.get('id')
 
-def generate_pdf_from_template(person, out_pdf_file, api_prefix, in_filename, MIN_SCORE, MAX_SCORE):
-    from PyPDF2 import PdfFileWriter, PdfFileReader
-    import io
-    
-    SCORE_OFFSET = 272
-    
-    perc = percentage_from_score(MIN_SCORE, MAX_SCORE, person.score)
-    
-    OFFSET_FINAL = SCORE_OFFSET * (perc/100)
-        
-    one_third = 100/3    
-    if perc <= one_third:
-        feedback_color = "green"
-    elif perc > one_third and perc <= one_third*2:
-        feedback_color = "yellow"
-    else:
-        feedback_color = "red"
-        
-    print(feedback_color)
-    
-    # read the existing PDF
-    in_pdf_file = api_prefix+'report_templates/stress_quickscan/'+in_filename+'_'+feedback_color+'.pdf'
-    
-    existing_pdf = PdfFileReader(open(in_pdf_file, "rb"))
-    existing_pdf_pagesize = existing_pdf.getPage(0).mediaBox
-    output = PdfFileWriter()
-    
-    def score(c):
-        c.drawImage(api_prefix+"resources/images/marker.png",
-                    130+OFFSET_FINAL,
-                    642.5,
-                    height=32,
-                    mask='auto', 
-                    preserveAspectRatio=True) 
-        
-    font_folder = str(Path(api_prefix, "fonts"))
-    
-    pdfmetrics.registerFont(TTFont('Montserrat-Regular', Path(font_folder,'Montserrat-Regular.ttf')))
-    pdfmetrics.registerFont(TTFont('Montserrat-Italic', Path(font_folder,'Montserrat-Italic.ttf')))
+# def generate_pdf_from_template(person, out_pdf_file, api_prefix, in_filename, MIN_SCORE, MAX_SCORE):
+#     from PyPDF2 import PdfFileWriter, PdfFileReader
+#     import io
+#
+#     SCORE_OFFSET = 261
+#
+#     perc = percentage_from_score(MIN_SCORE, MAX_SCORE, person.score)
+#
+#     OFFSET_FINAL = SCORE_OFFSET * (perc/100)
+#
+#     if perc <= percentage_from_score(MIN_SCORE, MAX_SCORE, 3):
+#         feedback_color = "green"
+#     elif perc <= percentage_from_score(MIN_SCORE, MAX_SCORE, 7):
+#         feedback_color = "yellow"
+#     else:
+#         feedback_color = "red"
+#
+#     print(feedback_color)
+#
+#     # read the existing PDF
+#     in_pdf_file = api_prefix+'report_templates/stress_quickscan/'+in_filename+'_'+feedback_color+'.pdf'
+#
+#     existing_pdf = PdfFileReader(open(in_pdf_file, "rb"))
+#     existing_pdf_pagesize = existing_pdf.getPage(0).mediaBox
+#     output = PdfFileWriter()
+#
+#     def score(c):
+#         c.drawImage(api_prefix+"resources/images/marker.png",
+#                     127+OFFSET_FINAL,
+#                     307,
+#                     height=32,
+#                     mask='auto',
+#                     preserveAspectRatio=True)
+#
+#     font_folder = str(Path(api_prefix, "fonts"))
+#
+#     pdfmetrics.registerFont(TTFont('Montserrat-Regular', Path(font_folder,'Montserrat-Regular.ttf')))
+#     pdfmetrics.registerFont(TTFont('Montserrat-Italic', Path(font_folder,'Montserrat-Italic.ttf')))
+#
+#     PAGE_WIDTH  = defaultPageSize[0]
+#     PAGE_HEIGHT = defaultPageSize[1]
+#
+#     center_coords = PAGE_WIDTH/2.0
+#
+#     packet = io.BytesIO()
+#     c = canvas.Canvas(packet, pagesize=(existing_pdf_pagesize.getWidth(),existing_pdf_pagesize.getHeight()))
+#
+#     c.showPage()
+#     score(c)
+#     c.showPage()
+#     c.showPage()
+#     c.showPage()
+#     c.showPage()
+#     c.showPage()
+#     c.showPage()
+#     c.showPage()
+#     c.save()
+#
+#     #move to the beginning of the StringIO buffer
+#     packet.seek(0)
+#
+#     new_pdf = PdfFileReader(packet)
+#
+#     for i in range(len(existing_pdf.pages)):
+#         page = existing_pdf.getPage(i)
+#         page.mergePage(new_pdf.getPage(i))
+#         output.addPage(page)
+#
+#     outputStream = open(out_pdf_file, "wb")
+#     output.write(outputStream)
+#     outputStream.close()
 
-    PAGE_WIDTH  = defaultPageSize[0]
-    PAGE_HEIGHT = defaultPageSize[1]
-    
-    center_coords = PAGE_WIDTH/2.0
-  
-    packet = io.BytesIO()
-    c = canvas.Canvas(packet, pagesize=(existing_pdf_pagesize.getWidth(),existing_pdf_pagesize.getHeight()))
+def fetch_form_id(name, stage, init_info):
+    for init in init_info:
+        if init['type'] == name:
+            for t in init['stage']:
+                if t['stage'] == stage:
+                    form_id = t['form_id']
 
-    c.showPage()
-    c.showPage()
-    score(c)
-    c.showPage()
-    c.showPage()
-    c.showPage()
-    c.showPage()
-    c.showPage()
-    c.showPage()
-    c.showPage()
-    c.save()
- 
-    #move to the beginning of the StringIO buffer
-    packet.seek(0)
- 
-    new_pdf = PdfFileReader(packet)
- 
-    for i in range(len(existing_pdf.pages)):
-        page = existing_pdf.getPage(i)
-        page.mergePage(new_pdf.getPage(i))
-        output.addPage(page)
- 
-    outputStream = open(out_pdf_file, "wb")
-    output.write(outputStream)
-    outputStream.close()
+    return form_id
 
-def send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, person):
-    link = "https://preview.mailerlite.com/i6e0h6"
+def send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, person, link):
+    # link = "https://preview.mailerlite.com/i6e0h6"
     f = requests.get(link)
 
     html_text = f.text

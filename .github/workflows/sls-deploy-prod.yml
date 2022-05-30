@@ -4,7 +4,7 @@ on:
     tags: # Deploy tag (e.g. v1.0) to production
       - 'v**'
 jobs:
-  deploy-dev:
+  deploy-prod:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
