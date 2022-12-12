@@ -4,10 +4,14 @@ service: serverless-psa-api
 
 plugins:
   - serverless-python-requirements
+  - serverless-finch
 custom:
   stage: "${opt:stage, self:provider.stage}"
   pythonRequirements:
     dockerizePip: true
+  client:
+    bucketName: rapport.neurohabits.nl
+    errorDocument: index.html
 
 package:
   exclude:
@@ -20,7 +24,7 @@ provider:
   stage: dev
   region: eu-central-1
   lambdaHashingVersion: 20201221
-  timeout: 60
+  timeout: 600
   environment:
     DOMAIN_SUFFIX: psa
   iamRoleStatements:
@@ -97,8 +101,8 @@ functions:
             type: COGNITO_USER_POOLS
             authorizerId:
               Ref: ApiGatewayAuthorizer
-  send_emails:
-    handler: app.send_emails
+  send_reports:
+    handler: app.send_reports
     events:
       - http:
           path: /send_emails
@@ -120,7 +124,7 @@ functions:
             authorizerId:
               Ref: ApiGatewayAuthorizer
       - schedule: 
-          rate: rate(10 minutes)
+          rate: rate(5 minutes)
           enabled: true
 
 resources:

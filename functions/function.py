@@ -3,6 +3,7 @@ from botocore.exceptions import ClientError
 import io
 import os
 import requests
+import logging
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -38,8 +39,13 @@ from collections import defaultdict
             
 #     return creds
 
-def percentage_from_score(min_score, max_score, score):
+def percentage_from_score(min_score, max_score, score, rotate=False):
     perc = (score - min_score) / (max_score - min_score) * 100
+    perc = min(100, perc)
+
+    if rotate:
+        perc = 100-perc
+
     return perc
 
 def create_dict_with_lists(lst):
@@ -66,6 +72,28 @@ def uploadFile(service, filename):
     print ('File ID: ' + file.get('id'))
     
     return file.get('id')
+
+def upload_file_to_s3(file_name, bucket, object_name=None):
+    """Upload a file to an S3 bucket
+
+    :param file_name: File to upload
+    :param bucket: Bucket to upload to
+    :param object_name: S3 object name. If not specified then file_name is used
+    :return: True if file was uploaded, else False
+    """
+
+    # If S3 object_name was not specified, use file_name
+    if object_name is None:
+        object_name = os.path.basename(file_name)
+
+    # Upload the file
+    s3_client = boto3.client('s3')
+    try:
+        response = s3_client.upload_file(file_name, bucket, object_name, ExtraArgs={'ACL': 'public-read'})
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return True
 
 # def generate_pdf_from_template(person, out_pdf_file, api_prefix, in_filename, MIN_SCORE, MAX_SCORE):
 #     from PyPDF2 import PdfFileWriter, PdfFileReader
@@ -167,7 +195,7 @@ def send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, 
     msg = MIMEMultipart('mixed')
     # Add subject, from and to lines.
     msg['Subject'] = subject 
-    msg['From'] = sender 
+    msg['From'] = sender
     msg['To'] = recipient
 
     msg_body = MIMEMultipart('alternative')
@@ -195,6 +223,9 @@ def send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, 
     # Add the attachment to the parent container.
     msg.attach(att)
 
+    print(type(msg))
+    print(msg)
+    
     try:
         #Provide the contents of the email.
         response = client.send_raw_email(
@@ -211,5 +242,5 @@ def send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, 
     except ClientError as e:
         print(e.response['Error']['Message'])
     else:
-        print("Email sent! Message ID:"),
+        print("Email sent to "+recipient+"! Message ID:"),
         print(response['MessageId'])

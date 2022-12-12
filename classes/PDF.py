@@ -2,6 +2,7 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 import sys
 sys.path.append('../functions')
 from functions.function import *
+import os
 import pathlib
 
 class PDF():
@@ -90,6 +91,15 @@ class PDF():
             page.mergePage(new_pdf.getPage(i))
             self.output.addPage(page)
 
+        if os.path.exists(out_pdf_file):
+            try:
+                os.remove(out_pdf_file)
+                print("The file has been deleted successfully")
+            except:
+                print("An error occured")
+        else:
+            print("The file does not exist")
+
         outputStream = open(out_pdf_file, "wb")
         self.output.write(outputStream)
         outputStream.close()
@@ -112,7 +122,6 @@ class PDF():
                                variables):
 
         scores_list = self.create_scores_list(person, variables)
-        print(variables)
 
         perc = []
 

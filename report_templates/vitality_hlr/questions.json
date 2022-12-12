@@ -1,0 +1,128 @@
+[
+  {
+  "category": "Werkdruk",
+  "items": [
+    {"code": "PSA_Werkdruk1",
+    "question": "Hoe vaak komt het voor dat het je echt niet lukt je werk af te krijgen?"
+    },
+    {"code": "PSA_Werkdruk2",
+      "question": "Hoe vaak komt het voor dat je, om je werk af te krijgen, je werk minder goed doet dan je eigenlijk zou willen?"
+    }
+  ]
+},
+{
+  "category": "Overuren",
+  "items": [
+    {"code": "PSA_Overuren1",
+      "question": "Hoeveel overuren maak je gemiddeld per week?"
+    }
+  ]
+},
+{
+  "category": "Emotionele belasting",
+  "items": [
+    {"code": "PSA_Emotionele belasting1",
+      "question": "Brengt je werk je in emotioneel moeilijke situaties?"
+    },
+    {"code": "PSA_Emotionele belasting2",
+      "question": "Is je werk emotioneel veeleisend? "
+    },
+    {"code": "PSA_Emotionele belasting3",
+      "question": "Raak je emotioneel betrokken bij je werk? "
+    }
+  ]
+},
+{
+  "category": "Cognitieve belasting",
+  "items": [
+    {"question": "Vereist je werk intensief nadenken?"},
+    {"question": "Vergt je werk dat je er je gedachten bij houdt?"},
+    {"question": "Vergt je werk veel aandacht van je?"}
+  ]
+},{
+  "category": "Sociale steun leidinggevende",
+  "items": [
+    {"question": "Mijn leidinggevende heeft oog voor het welzijn van de medewerkers"},
+    {"question": "Mijn leidinggevende besteedt aandacht aan wat ik zeg"}
+  ]
+},{
+  "category": "Functionele steun leidinggevende",
+  "items": [
+    {"question": "Mijn leidinggevende helpt het werk gedaan te krijgen"},
+    {"question": "Mijn leidinggevende kan mensen goed laten samenwerken"}
+  ]
+},{
+  "category": "Sociale steun collegae",
+  "items": [
+    {"question": "Mijn collegae zijn vriendelijk"},
+    {"question": "Mijn collegae hebben persoonlijke belangstelling voor me"}
+  ]
+},{
+  "category": "Functionele steun collegae",
+  "items": [
+    {"question": "Mijn collegae helpen om het werk gedaan te krijgen"},
+    {"question": "Mijn collegae zijn goed in hun werk"}
+  ]
+},{
+  "category": "Autonomie",
+  "items": [
+    {"question": "Kun je zelf beslissen hoe je het werk uitvoert?"},
+    {"question": "Bepaal je zelf de volgorde van je werkzaamheden?"},
+    {"question": "Kun je zelf je werktempo bepalen?"},
+    {"question": "Moet je in je werk zelf oplossingen bedenken om bepaalde dingen te doen?"},
+    {"question": "Kun je verlof opnemen wanneer je dat wilt?"},
+    {"question": "Kun je zelf bepalen op welke tijden je werkt?"}
+  ]
+},{
+  "category": "Ongewenst gedrag intern",
+  "items": [
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nOngewenste seksuele aandacht van leidinggevenden of collegae?"},
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nIntimidatie door leidinggevenden of collegae?"},
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nLichamelijk geweld door leidinggevenden of collegae?"},
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nPesten door leidinggevenden of collegae?"}
+  ]
+},{
+  "category": "Ongewenst gedrag extern",
+  "items": [
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nOngewenste seksuele aandacht van leerlingen of ouders?"},
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nIntimidatie door leerlingen of ouders?"},
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nLichamelijk geweld door leerlingen of ouders?"},
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nPesten door leerlingen of ouders?"}
+  ]
+},{
+  "category": "Burn-out klachten",
+  "items": [
+    {"question": "Ik voel me emotioneel uitgeput door het werk"},
+    {"question": "Aan het einde van een werkdag voel ik me leeg"},
+    {"question": "Ik voel me moe als ik in de ochtend opsta en geconfronteerd wordt met mijn werk"},
+    {"question": "Het vergt heel veel van mij om de hele dag met mensen te werken"},
+    {"question": "Ik voel me compleet uitgeput door mijn werk"}
+  ]
+},{
+  "category": "Bevlogenheid",
+  "items": [
+    {"question": "Als ik werk voel ik me fit en sterk"},
+    {"question": "Ik ben enthousiast over mijn baan"},
+    {"question": "Ik ga helemaal op in mijn werk"}
+  ]
+},{
+  "category": "Tevredenheid",
+  "items": [
+    {"question": "In hoeverre ben je, alles bij elkaar genomen, tevreden met je werk?"},
+    {"question": "In hoeverre ben je, alles bij elkaar genomen, tevreden met je arbeidsomstandigheden?"}
+  ]
+},{
+  "category": "Organisatiecultuur",
+  "items": [
+    {"question": "Op het werk is er een open sfeer waarin problemen in de werksituatie gemakkelijk bespreekbaar zijn"},
+    {"question": "Op het werk worden signalen van werkdruk en overbelasting goed opgepikt door de leidinggevenden"},
+    {"question": "Op het werk spreken werknemers elkaar aan op de wijze waarop taken worden uitgevoerd"},
+    {"question": "Op het werk treden de leidinggevenden actief op tegen collega's die de kantjes ervan af lopen"}
+  ]
+},{
+  "category": "Ontwikkelmogelijkheden",
+  "items": [
+    {"question": "Stimuleert je leidinggevende de ontwikkeling van je kennis en vaardigheden?"}
+  ]
+}
+]
