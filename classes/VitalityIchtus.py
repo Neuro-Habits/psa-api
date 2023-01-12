@@ -293,27 +293,27 @@ class VitalityIchtus(PDF):
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
-        ## Ontwikkelmogelijkheden
-#         subject = "Ontwikkelmogelijkheden"
-#         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-#                     (-10.93*cm)+(0.4*cm),
-#                     4.2*cm,
-#                     height=25,
-#                     preserveAspectRatio=True)
+        # Ontwikkelmogelijkheden
+        subject = "Ontwikkelmogelijkheden"
+        c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
+                    (-10.93*cm)+(0.4*cm),
+                    4.2*cm,
+                    height=25,
+                    preserveAspectRatio=True)
 
-#         sub_attrs = self.page_attrs[subject]
-#         self.draw_score(c,
-#                         sub_attrs['score_offset']*cm,
-#                         sub_attrs['offset_horizontal'],
-#                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-#                         sub_attrs['offset_vertical']*cm,
-#                         height = height)
+        sub_attrs = self.page_attrs[subject]
+        self.draw_score(c,
+                        sub_attrs['score_offset']*cm,
+                        sub_attrs['offset_horizontal'],
+                        percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
+                        sub_attrs['offset_vertical']*cm,
+                        height = height)
 
-#         frame = Frame(1.5*cm, 1.56*cm,8*cm,100, showBoundary=0)
-#         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
-#         frame.addFromList(story,c)
+        frame = Frame(1.5*cm, 1.56*cm,8*cm,100, showBoundary=0)
+        story = [Paragraph(self.cutoff(subject)[1], custom_style)]
+        frame.addFromList(story,c)
 
-#         c.showPage() # Ongewenst gedrag intern, ongewenst gedrag extern, ontwikkelmogelijkheden
+        c.showPage() # Ongewenst gedrag intern, ongewenst gedrag extern, ontwikkelmogelijkheden
 
         ## Burn-out klachten
         subject = "Burn-out klachten"

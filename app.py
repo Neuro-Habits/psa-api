@@ -101,7 +101,7 @@ def construct_df_from_form_data(event, context):
     total_score = sum((field['properties']['steps']-1) if field['properties']['start_at_one'] else field['properties']['steps'] for field in opinion_fields)
 
     for col in frm['fields']:
-        if col['type'] != "statement":
+        if col['type'] != "statement": # Since statements don't have certain properties like 'required'
             col_ids.append(col['id'])
             if col['type'] == "email":
                 cols.append("email")
@@ -111,25 +111,37 @@ def construct_df_from_form_data(event, context):
     print("Number of fields in survey:", str(len(frm['fields'])))
     print("Number of respondents in survey:", str(len(resp['items'])))
 
+    print("Column IDs:")
     print(col_ids)
+
+    print(f"Nr of columns in list: {len(col_ids)}")
 
     for item in resp['items']:
         row = []
 
         i = j = 0
-        while i <= len(item['answers'])-1:
-            answer = item['answers'][i]
+        while j < len(col_ids):
+            if i < (len(item['answers'])):
+                answer = item['answers'][i]
 
-            if answer['field']['id'] == col_ids[j]:
-                tpe = answer['type']
-                row.append(answer[tpe])
-                i += 1
-                j += 1
+                if answer['field']['id'] == col_ids[j]:
+                    tpe = answer['type']
+                    row.append(answer[tpe])
+                    i += 1
+                    j += 1
+                else:
+                    print("added")
+                    row.append('no answer')
+                    j += 1
+            
             else:
+                print("added")
                 row.append('no answer')
                 j += 1
 
         rows.append(row)
+    
+    print(rows)
 
     df = pd.DataFrame(rows, columns=cols)
     json_df = df.to_dict(orient="dict")
@@ -281,6 +293,9 @@ def construct_df_from_form_data(event, context):
 
             variables_list.append(variables_list_resp)
 
+        print("Vars list")
+        print(variables_list)
+
         score_list = []
         # For every item (respondent) in list of key: value pairs
         for item in variables_list:
@@ -416,7 +431,7 @@ def generate_pdfs(event, context):
     resultsList = []
 
     for person in personList:
-        print(person.__dict__)
+        print(f"Person dict: {person.__dict__}")
         result = {}
 
         _class.person = person
@@ -463,7 +478,6 @@ def send_reports(event, context):
 
         filepath = general_prefix + "tmp/" + entity['report_title']
 
-        print(person.email)
         if person.email == None: # REPLACE THIS WITH != None
             print("Using email")
             sender = "Neuro Habits <info@neurohabits.nl>"
@@ -484,7 +498,7 @@ def send_reports(event, context):
 
         elif person.url != None:
             print("Using URL, uploading file to S3")
-            print(person.url)
+            print(f"Personal document number: {person.url}")
             upload_file_to_s3(filepath, "nh-psa-api", str(person.url)+"/"+entity['report_title'])
 
         else:
@@ -583,6 +597,8 @@ def selfscan_cron(event, context):
         'forms': form_ids,
         'reports_sent': reports_sent
     }
+
+    print(f"Reports sent: {reports_sent}")
 
     return {
         'statusCode': 200,
