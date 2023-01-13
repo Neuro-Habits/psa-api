@@ -19,6 +19,8 @@ class PDF():
         self.min_score = min_score
         self.max_score = max_score
 
+        self.doc_center = 21.6
+
         self.out_pdf_file = self.general_prefix+"tmp/"+self.out_filename
         print(self.out_pdf_file)
 
@@ -64,14 +66,15 @@ class PDF():
                    offset_vertical,
                    height=32,
                    mask='auto',
-                   preserveAspectRatio=True
+                   preserveAspectRatio=True,
                    ):
 
+        bias = 3.23
         offset_final = score_offset * (score_percentage/100)
 
         c.drawImage("resources/images/marker.png",
-                    offset_horizontal+offset_final,
-                    offset_vertical,
+                    bias*cm + offset_horizontal*cm + offset_final*cm,
+                    offset_vertical*cm,
                     height=height,
                     mask=mask,
                     preserveAspectRatio=preserveAspectRatio)

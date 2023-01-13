@@ -411,7 +411,17 @@ def generate_pdfs(event, context):
     elif class_inf['class_name'] == 'Vitality Ichtus':
         _class = VitalityIchtus(class_attrs)
 
+    if fixScores != None:
+        # Create list of attributes
+        attrs = [val for key, val in class_attrs.items() if key == "page_attrs"]
+        # Create list of [[{'subject':'min/max score'}]]
+        subjList = [[{"subject":k,"value":v[fixScores+'_score']} for k,v in attr.items()] for attr in attrs][0]
+        print(subjList)
+    
     for key, val in class_attrs.items():
+        if fixScores and key == 'question_dict':
+            print(val)
+        
         setattr(_class,key,val)
 
     personList = []
@@ -422,7 +432,10 @@ def generate_pdfs(event, context):
         )
 
         for var in variables:
-            setattr(_person, var, person[var])
+            if fixScores:
+                setattr(_person, var, [subj["value"] for subj in subjList if subj["subject"] == var][0])
+            else:
+                setattr(_person, var, person[var])
 
         setattr(_person, "url", person["url"])
 

@@ -52,6 +52,11 @@ class VitalityIchtus(PDF):
 
     def create_canvas(self):
         font_folder = str(Path("", "fonts"))
+
+        x_leftAlign = -(self.doc_center / 2)
+        arrow_x = x_leftAlign*cm + 0.29*cm
+        textBoxWidth = 8.5*cm
+
         pdfmetrics.registerFont(TTFont('Montserrat-SemiBold', Path(font_folder,'Montserrat-SemiBold.ttf')))
         pdfmetrics.registerFont(TTFont('Montserrat-Regular', Path(font_folder,'Montserrat-Regular.ttf')))
         pdfmetrics.registerFont(TTFont('Montserrat-Medium', Path(font_folder,'Montserrat-Medium.ttf')))
@@ -69,27 +74,28 @@ class VitalityIchtus(PDF):
         subject = "Werkdruk"
         sub_attrs = self.page_attrs[subject]
         print(percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)))
+
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
                         sub_attrs['offset_vertical'],
                         height = height)
 
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     18.7*cm,
                     height=25,
                     preserveAspectRatio=True)
 
-        frame = Frame(1.5*cm, 16.1*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 16.1*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
         ## Overuren
         subject = "Overuren"
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     11*cm,
                     height=25,
                     preserveAspectRatio=True)
@@ -97,13 +103,13 @@ class VitalityIchtus(PDF):
         sub_attrs = self.page_attrs[subject]
 
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
-        frame = Frame(1.5*cm, 8.3*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 8.3*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
@@ -111,19 +117,19 @@ class VitalityIchtus(PDF):
         subject = "Emotionele belasting"
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
                         sub_attrs['offset_vertical'],
                         height = height)
 
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     4.1*cm,
                     height=25,
                     preserveAspectRatio=True)
 
-        frame = Frame(1.5*cm, 1.5*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 1.5*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
@@ -133,39 +139,39 @@ class VitalityIchtus(PDF):
         subject = "Cognitieve belasting"
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     18.7*cm,
                     height=25,
                     preserveAspectRatio=True)
 
-        frame = Frame(1.5*cm, 16.1*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 16.1*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
         ## Sociale steun leidinggevende
         subject = "Sociale steun leidinggevende"
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     11.2*cm,
                     height=25,
                     preserveAspectRatio=True)
 
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
-        frame = Frame(1.5*cm, 8.5*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 8.5*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
@@ -173,19 +179,19 @@ class VitalityIchtus(PDF):
         subject = "Functionele steun leidinggevende"
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     3.9*cm,
                     height=25,
                     preserveAspectRatio=True)
 
-        frame = Frame(1.5*cm, 1.3*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 1.3*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
@@ -195,39 +201,39 @@ class VitalityIchtus(PDF):
         subject = "Sociale steun collegae"
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     18.7*cm,
                     height=25,
                     preserveAspectRatio=True)
 
-        frame = Frame(1.5*cm, 16.1*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 16.1*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
         ## Functionele steun collegae,
         subject = "Functionele steun collegae"
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     11.4*cm,
                     height=25,
                     preserveAspectRatio=True)
 
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
-        frame = Frame(1.5*cm, 8.7*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 8.7*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
@@ -235,19 +241,19 @@ class VitalityIchtus(PDF):
         subject = "Autonomie"
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     4.8*cm,
                     height=25,
                     preserveAspectRatio=True)
 
-        frame = Frame(1.5*cm, 2.2*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 2.2*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
@@ -257,59 +263,60 @@ class VitalityIchtus(PDF):
         subject = "Ongewenst gedrag intern"
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
-                    18.7*cm,
+                    arrow_x,
+                    17.7*cm,
                     height=25,
                     preserveAspectRatio=True)
 
-        frame = Frame(1.5*cm, 16.1*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 15.1*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
         ## Ongewenst gedrag extern
         subject = "Ongewenst gedrag extern"
-        c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
-                    11.4*cm,
-                    height=25,
-                    preserveAspectRatio=True)
 
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
-        frame = Frame(1.5*cm, 8.7*cm,8*cm,100, showBoundary=0)
+        c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
+                    arrow_x,
+                    10.8*cm,
+                    height=25,
+                    preserveAspectRatio=True)
+
+        frame = Frame(1.5*cm, 8.1*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
         # Ontwikkelmogelijkheden
         subject = "Ontwikkelmogelijkheden"
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     4.2*cm,
                     height=25,
                     preserveAspectRatio=True)
 
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
-                        percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
+                        percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject),True),
+                        sub_attrs['offset_vertical'],
                         height = height)
 
-        frame = Frame(1.5*cm, 1.56*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 1.56*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
@@ -319,39 +326,39 @@ class VitalityIchtus(PDF):
         subject = "Burn-out klachten"
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     18.7*cm,
                     height=25,
                     preserveAspectRatio=True)
 
-        frame = Frame(1.5*cm, 16.1*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 16.1*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
         ## Bevlogenheid
         subject = "Bevlogenheid"
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     11.4*cm,
                     height=25,
                     preserveAspectRatio=True)
 
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
-        frame = Frame(1.5*cm, 8.7*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 8.7*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
@@ -359,19 +366,19 @@ class VitalityIchtus(PDF):
         subject = "Tevredenheid"
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
                         percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject)),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['offset_vertical'],
                         height = height)
 
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
+                    arrow_x,
                     4.8*cm,
                     height=25,
                     preserveAspectRatio=True)
 
-        frame = Frame(1.5*cm, 2.2*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 2.2*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
@@ -382,19 +389,19 @@ class VitalityIchtus(PDF):
 
         sub_attrs = self.page_attrs[subject]
         self.draw_score(c,
-                        sub_attrs['score_offset']*cm,
-                        sub_attrs['offset_horizontal'],
-                        percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject), rotate=True),
-                        sub_attrs['offset_vertical']*cm,
+                        sub_attrs['score_offset'],
+                        x_leftAlign + sub_attrs['offset_horizontal'],
+                        percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'],getattr(self.person, subject), True),
+                        sub_attrs['offset_vertical'],
                         height = height)
 
         c.drawImage("resources/images/arrow_"+self.cutoff(subject)[0]+".png",
-                    (-10.93*cm)+(0.4*cm),
-                    18.7*cm,
+                    arrow_x,
+                    18.3*cm,
                     height=25,
                     preserveAspectRatio=True)
 
-        frame = Frame(1.5*cm, 16.1*cm,8*cm,100, showBoundary=0)
+        frame = Frame(1.5*cm, 15.8*cm,textBoxWidth,100, showBoundary=0)
         story = [Paragraph(self.cutoff(subject)[1], custom_style)]
         frame.addFromList(story,c)
 
