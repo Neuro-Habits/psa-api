@@ -1,0 +1,116 @@
+[
+  {
+  "category": "Werkdruk",
+  "items": [
+    {"question": "How often do you really not succeed in completing your work?"},
+    {"question": "How often do you do your work less well than you'd like, in order to finish it?"}
+  ]
+},
+{
+  "category": "Overuren",
+  "items": [
+    {"question": "How many hours do you work overtime per week, on average?"}
+  ]
+},
+{
+  "category": "Emotionele belasting",
+  "items": [
+    {"question": "Does your job bring you in emotionally difficult situations?"},
+    {"question": "Is your job emotionally demanding?"},
+    {"question": "Do you become emotionally invested in your job?"}
+  ]
+},
+{
+  "category": "Cognitieve belasting",
+  "items": [
+    {"question": "Does your work require intensive thinking?"},
+    {"question": "Does your work require you to keep your mind on it?"},
+    {"question": "Does your work require a lot of attention from you?"}
+  ]
+},{
+  "category": "Sociale steun leidinggevende",
+  "items": [
+    {"question": "My manager pays attention to the well-being of its employees"},
+    {"question": "My manager pays attention to what I say."}
+  ]
+},{
+  "category": "Functionele steun leidinggevende",
+  "items": [
+    {"question": "My manager helps to get the work done."},
+    {"question": "My manager can make people work well together."}
+  ]
+},{
+  "category": "Sociale steun collegae",
+  "items": [
+    {"question": "My colleagues are friendly."},
+    {"question": "My colleagues show personal interest in me."}
+  ]
+},{
+  "category": "Functionele steun collegae",
+  "items": [
+    {"question": "My colleagues help to get the work done."},
+    {"question": "My colleagues are good at their jobs."}
+  ]
+},{
+  "category": "Autonomie",
+  "items": [
+    {"question": "Can you decide for yourself how to do your work?"},
+    {"question": "Do you determine the order of your tasks?"},
+    {"question": "Can you determine your own work pace?"},
+    {"question": "Do you have to come up with solutions by yourself to do certain tasks in your work?"},
+    {"question": "Can you take leave when you want to?"},
+    {"question": "Can you decide for yourself how to plan your working hours?"}
+  ]
+},{
+  "category": "Ongewenst gedrag intern",
+  "items": [
+    {"question": "Please indicate to what extent you personally experienced the following in the past 12 months:\n\nUnwanted sexual attention from managers or colleagues?"},
+    {"question": "Please indicate to what extent you personally experienced the following in the past 12 months:\n\nIntimidation by managers or colleagues?"},
+    {"question": "Please indicate to what extent you personally experienced the following in the past 12 months:\n\nPhysical violence by managers or colleagues?"},
+    {"question": "Please indicate to what extent you personally experienced the following in the past 12 months:\n\nBullying by managers or colleagues?"}
+  ]
+},{
+  "category": "Ongewenst gedrag extern",
+  "items": [
+    {"question": "Please indicate to what extent you personally experienced the following in the past 12 months:\n\nUnwanted sexual attention from clients?"},
+    {"question": "Please indicate to what extent you personally experienced the following in the past 12 months:\n\nIntimidation by clients?"},
+    {"question": "Please indicate to what extent you personally experienced the following in the past 12 months:\n\nPhysical violence by clients?"},
+    {"question": "Please indicate to what extent you personally experienced the following in the past 12 months:\n\nBullying by clients?"}
+  ]
+},{
+  "category": "Ontwikkelmogelijkheden",
+  "items": [
+    {"question": "Does your manager encourage the development of your skills and knowledge?"}
+  ]
+},{
+  "category": "Burn-out klachten",
+  "items": [
+    {"question": "I feel emotionally drained by work."},
+    {"question": "At the end of a workday, I feel empty."},
+    {"question": "I feel tired when I wake up in the morning and get confronted with my job."},
+    {"question": "It takes a lot out of me to work with people all day."},
+    {"question": "I feel completely drained by my job."}
+  ]
+},{
+  "category": "Bevlogenheid",
+  "items": [
+    {"question": "When I work, I feel fit and strong."},
+    {"question": "I am enthusiastic about my job."},
+    {"question": "I completely immerse myself in my work."}
+  ]
+},{
+  "category": "Tevredenheid",
+  "items": [
+    {"question": "Overall, how satisfied are you with your job?"},
+    {"question": "Overall, how satisfied are you with your working conditions?"}
+  ]
+},{
+  "category": "Organisatiecultuur",
+  "items": [
+    {"question": "At work, there's an open atmosphere where problems can easily be discussed."},
+    {"question": "At work, signs of workload and overload are picked up well by managers"},
+    {"question": "At work, employees address each other on how tasks are performed."},
+    {"question": "At work, managers actively take action against colleagues who are cutting corners."}
+  ]
+}
+]

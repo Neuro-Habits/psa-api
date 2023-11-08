@@ -1,6 +1,8 @@
 org: neurohabits
 app: nh-psa
 service: serverless-psa-api
+frameworkVersion: '3'
+configValidationMode: error
 
 plugins:
   - serverless-python-requirements
@@ -14,25 +16,25 @@ custom:
     errorDocument: index.html
 
 package:
-  exclude:
-    - node_modules/**
-    - env/**
+  patterns:
+    - '!node_modules/**'
+    - '!env/**'
 
 provider:
   name: aws
   runtime: python3.8
   stage: dev
   region: eu-central-1
-  lambdaHashingVersion: 20201221
   timeout: 600
   environment:
     DOMAIN_SUFFIX: psa
-  iamRoleStatements:
-    - Effect: 'Allow'
-      Action:
-        - "ses:SendRawEmail"
-      Resource:
-        "*"
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Resource: "*"
+          Action:
+            - "ses:SendRawEmail"
 
 functions:
   hello:
@@ -124,7 +126,7 @@ functions:
             authorizerId:
               Ref: ApiGatewayAuthorizer
       - schedule: 
-          rate: rate(5 minutes)
+          rate: rate(1 minute)
           enabled: true
 
 resources:

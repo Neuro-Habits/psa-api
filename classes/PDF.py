@@ -4,17 +4,22 @@ sys.path.append('../functions')
 from functions.function import *
 import os
 import pathlib
+from decouple import config
 
 class PDF():
     def __init__(self,
                  attrs,
-                 min_score = 1,
+                 min_score = 0,
                  max_score = 10,
                  person = None
                  ):
 
         for k, v in attrs.items():
             setattr(self, k, v)
+
+        lambda_env = config("LAMBDA_ENV")
+
+        self.general_prefix = "/" if lambda_env == "True" else ""
 
         self.min_score = min_score
         self.max_score = max_score
@@ -67,9 +72,13 @@ class PDF():
                    height=32,
                    mask='auto',
                    preserveAspectRatio=True,
+                   bias=True
                    ):
 
-        bias = 3.23
+        if bias:
+            bias = 3.23
+        else:
+            bias = 0
         offset_final = score_offset * (score_percentage/100)
 
         c.drawImage("resources/images/marker.png",
@@ -108,32 +117,3 @@ class PDF():
         outputStream.close()
 
         print("Saved report at "+out_pdf_file)
-
-    def create_scores_list(self,
-                           person,
-                           variables):
-
-        scores_list = []
-        for variable in variables:
-            scores_list.append(getattr(person, variable))
-
-        return scores_list
-
-
-    def calculate_final_scores(self,
-                               person,
-                               variables):
-
-        scores_list = self.create_scores_list(person, variables)
-
-        perc = []
-
-        for score in scores_list:
-            perc.append(
-                percentage_from_score(self.min_score, self.max_score, score)
-            )
-
-        print("perc:")
-        print(perc)
-
-        return perc

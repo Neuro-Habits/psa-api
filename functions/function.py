@@ -10,7 +10,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.rl_config import defaultPageSize
 from reportlab.pdfbase.pdfmetrics import stringWidth
-from reportlab.pdfbase import pdfmetrics  
+from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib import utils
 from reportlab.platypus import Frame, Image
@@ -29,6 +29,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from collections import defaultdict
+from decouple import config
 
 # def authenticate(SCOPES):
 #     SECRET_FILENAME = 'client_secret.json'
@@ -36,7 +37,7 @@ from collections import defaultdict
 
 #     creds = service_account.Credentials.from_service_account_file(
 #         SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-            
+
 #     return creds
 
 def percentage_from_score(min_score, max_score, score, rotate=False):
@@ -44,9 +45,10 @@ def percentage_from_score(min_score, max_score, score, rotate=False):
     perc = min(100, perc)
 
     if rotate:
-        perc = 100-perc
+        perc = 100 - perc
 
     return perc
+
 
 def create_dict_with_lists(lst):
     # using loop to get dictionaries
@@ -59,19 +61,21 @@ def create_dict_with_lists(lst):
 
     return res
 
+
 def uploadFile(service, filename):
     file_metadata = {
         'name': filename,
         'mimeType': 'application/pdf',
-        #'parents': [myDriveId]
+        # 'parents': [myDriveId]
     }
     media = MediaFileUpload(file_metadata['name'],
                             mimetype='application/pdf',
                             resumable=True)
     file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-    print ('File ID: ' + file.get('id'))
-    
+    print('File ID: ' + file.get('id'))
+
     return file.get('id')
+
 
 def upload_file_to_s3(file_name, bucket, object_name=None):
     """Upload a file to an S3 bucket
@@ -94,6 +98,7 @@ def upload_file_to_s3(file_name, bucket, object_name=None):
         logging.error(e)
         return False
     return True
+
 
 # def generate_pdf_from_template(person, out_pdf_file, api_prefix, in_filename, MIN_SCORE, MAX_SCORE):
 #     from PyPDF2 import PdfFileWriter, PdfFileReader
@@ -176,13 +181,14 @@ def fetch_form_id(name, stage, init_info):
 
     return form_id
 
+
 def send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, person, link):
     # link = "https://preview.mailerlite.com/i6e0h6"
     f = requests.get(link)
 
     html_text = f.text
     html_text = html_text.replace("Afmelden", "")
-    
+
     # The email body for recipients with non-HTML email clients.
     BODY_TEXT = ""
 
@@ -190,11 +196,11 @@ def send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, 
     BODY_HTML = html_text
 
     CHARSET = "utf-8"
-    client = boto3.client('ses',region_name=aws_region)
+    client = boto3.client('ses', region_name=aws_region)
 
     msg = MIMEMultipart('mixed')
     # Add subject, from and to lines.
-    msg['Subject'] = subject 
+    msg['Subject'] = subject
     msg['From'] = sender
     msg['To'] = recipient
 
@@ -209,7 +215,7 @@ def send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, 
     # Define the attachment part and encode it using MIMEApplication.
     att = MIMEApplication(open(filepath, 'rb').read())
 
-    att.add_header('Content-Disposition','attachment',filename=os.path.basename(filepath))
+    att.add_header('Content-Disposition', 'attachment', filename=os.path.basename(filepath))
 
     if os.path.exists(filepath):
         print("File exists")
@@ -224,23 +230,23 @@ def send_mail_with_attach_ses(sender, recipient, aws_region, subject, filepath, 
     msg.attach(att)
 
     print(type(msg))
-    print(msg)
-    
+
     try:
-        #Provide the contents of the email.
+        # Provide the contents of the email.
         response = client.send_raw_email(
             Source=msg['From'],
             Destinations=[
                 msg['To']
             ],
             RawMessage={
-                'Data':msg.as_string(),
+                'Data': msg.as_string(),
             },
             ConfigurationSetName="ConfigSet"
         )
     # Display an error if something goes wrong. 
     except ClientError as e:
+        print("Encountered an error sending the email")
         print(e.response['Error']['Message'])
     else:
-        print("Email sent to "+recipient+"! Message ID:"),
+        print("Email sent to " + recipient + "! Message ID:"),
         print(response['MessageId'])

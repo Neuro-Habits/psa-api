@@ -72,10 +72,10 @@
 },{
   "category": "Ongewenst gedrag extern",
   "items": [
-    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nOngewenste seksuele aandacht van leerlingen of ouders?"},
-    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nIntimidatie door leerlingen of ouders?"},
-    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nLichamelijk geweld door leerlingen of ouders?"},
-    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nPesten door leerlingen of ouders?"}
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nOngewenste seksuele aandacht van bezoekers, patiënten of externe partijen?"},
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nIntimidatie door bezoekers, patiënten of externe partijen?"},
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nLichamelijk geweld bezoekers, patiënten of externe partijen?"},
+    {"question": "Kun je aangeven in welke mate je in de afgelopen 12 maanden persoonlijk te maken heeft gehad met:\n\nPesten door bezoekers, patiënten of externe partijen?"}
   ]
 },{
   "category": "Ontwikkelmogelijkheden",

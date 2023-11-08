@@ -1,0 +1,34 @@
+[
+  {
+  "category": "Autonomie",
+  "items": [
+    {"question": "Ik geef leerlingen toetsen als ik wil dat ze echt leren."},
+    {"question": "Ik probeer uit te leggen waarom leerdoelen nu al belangrijk zijn, niet later."},
+    {"question": "Ik denk bewust na over autonomie verhogend taalgebruik. (Ik voorkom bijvoorbeeld de woorden: je moet dit)."},
+    {"question": "Leerlingen mogen zelf bepalen hoe ze bewijzen dat ze een leerdoel onder de knie hebben."}
+  ]},
+    {
+  "category": "Controle",
+  "items": [
+    {"question": "Ik geef leerlingen toetsen als ik wil dat ze echt leren."},
+    {"question": "Ik probeer uit te leggen waarom leerdoelen nu al belangrijk zijn, niet later."},
+    {"question": "Ik denk bewust na over autonomie verhogend taalgebruik. (Ik voorkom bijvoorbeeld de woorden: je moet dit)."},
+    {"question": "Leerlingen mogen zelf bepalen hoe ze bewijzen dat ze een leerdoel onder de knie hebben."}
+  ]},
+  {
+    "category": "Competentie",
+    "items": [
+      {"question": "Ik maak leerlingen duidelijk dat ik hoge verwachtingen heb van alle leerlingen."},
+      {"question": "Wanneer ik oefeningen geef, zorg ik ervoor dat ongeveer 80% in succeservaringen resulteert."},
+      {"question": "Ik spreek naar leerlingen uit dat ik er vertrouwen in heb dat ze de leerstof onder de knie kunnen krijgen."},
+      {"question": "Ik maak duidelijk aan leerlingen wat ik van ze verwacht."}
+    ]},
+  {
+    "category": "Relatie",
+    "items": [
+      {"question": "Ik geef meer complimenten voor gewenst gedrag, dan standjes voor ongewenst gedrag."},
+      {"question": "In mijn lessen gebruik ik werkvormen waar ik mijn leerlingen beter door leer kennen of er beter achter kom hoe het met ze gaat."},
+      {"question": "Ik geef leerlingen het gevoel dat het niet erg is om fouten te maken."},
+      {"question": "In mijn lessen laat ik leerlingen samenwerken."}
+    ]}
+]

@@ -1,0 +1,173 @@
+{
+    "class_name":"WeManity",
+    "class_attrs":{
+        "page_attrs":{
+            "Werkdruk":{
+                "text":["Je geeft aan dat je altijd of meestal je werk af krijgt, en dat je nooit of niet vaak je werk minder goed doet dan je eigenlijk zou willen, om het werk af te krijgen. Dit wijst op een lage werkdruk.", "Je geeft aan dat het je soms niet lukt om je werk af te krijgen, en dat je soms je werk minder goed doet dan je eigenlijk zou willen, om het werk af te krijgen. Dit wijst op een enigszins hoge werkdruk.", "Je geeft aan dat je je werk vaak of nooit afkrijgt, en dat je vaak of altijd je werk minder goed doet dan je eigenlijk zou willen, om het werk af te krijgen. Dit wijst op een hoge werkdruk."],
+                "offset_vertical":22.14,
+                "offset_horizontal":3.13,
+                "score_offset":6,
+                "cutoff_score":[1,2,3],
+                "colors":["green", "yellow", "red"],
+                "min_score":1,
+                "max_score":4
+            },
+            "Overuren":{
+                "text":["Dit is het aantal overuren dat je gemiddeld per week maakt. Gemiddeld geven Nederlanders aan dat zij 3 overuren per week maken."],
+                "offset_vertical":14.36,
+                "offset_horizontal":3.13,
+                "score_offset":6.59,
+                "cutoff_score":[0],
+                "colors":["grey"],
+                "min_score":0,
+                "max_score":11
+            },
+            "Emotionele belasting":{
+                "text":["Jouw score geeft aan dat je minder emotionele belasting ervaart dan een gemiddelde werknemer.", "Je ervaart de emotionele belasting als hoger dan gemiddeld. Dat betekent dat je te maken hebt met hoge emotionele taakeisen."],
+                "offset_vertical":7.19,
+                "offset_horizontal":3.13,
+                "score_offset":6,
+                "cutoff_score":[0,1.68],
+                "colors":["yellow", "red"],
+                "min_score":1,
+                "max_score":4
+            },
+            "Cognitieve belasting":{
+                "text":["Jouw score geeft aan dat je minder mentale belasting ervaart in het werk dan een gemiddelde werknemer.", "Jouw score geeft aan dat je de cognitieve belasting in het werk als hoger ervaart dan een gemiddelde werknemer."],
+                "offset_vertical":22.00,
+                "offset_horizontal":2.92,
+                "score_offset":6.1,
+                "cutoff_score":[0,2.99],
+                "colors":["yellow", "red"],
+                "min_score":1,
+                "max_score":4
+            },
+            "Sociale steun leidinggevende":{
+                "text":["Je score geeft aan dat je weinig sociale steun ervaart van jouw leidinggevende.", "Je score geeft aan dat je beperkt sociale steun ervaart van jouw leidinggevende.", "Jouw score geeft aan dat je evenveel sociale steun ervaart van je leidinggevende als de gemiddelde werknemer.", "Jouw score geeft aan dat je meer sociale steun ervaart van je leidinggevende dan de gemiddelde werknemer."],
+                "offset_vertical":14.23,
+                "offset_horizontal":2.92,
+                "score_offset":6.1,
+                "cutoff_score":[1,2,2.5,3],
+                "colors":["red", "orange", "yellow", "green"],
+                "min_score":1,
+                "max_score":4
+            },
+            "Functionele steun leidinggevende":{
+                "text":["Je geeft aan dat je weinig functionele steun van je leidinggevende ervaart.","Je geeft aan dat je beperkt functionele steun van je leidinggevende ervaart.","Je geeft aan dat je evenveel functionele steun van je leidinggevende ervaart als de gemiddelde werknemer.","Je geeft aan dat je meer functionele steun van je leidinggevende ervaart dan de gemiddelde werknemer."],
+                "offset_vertical":6.795,
+                "offset_horizontal":2.92,
+                "score_offset":6.1,
+                "cutoff_score":[1,2,2.5,3],
+                "colors":["red", "orange", "yellow", "green"],
+                "min_score":1,
+                "max_score":4
+            },
+            "Sociale steun collegae":{
+                "text":["Je score geeft aan dat je weinig sociale steun ervaart van je collega's.","Je score geeft aan dat je beperkt sociale steun ervaart van je collega's.","Je score geeft aan dat je evenveel sociale steun ervaart van je collega's als de gemiddelde werknemer.","Je score geeft aan dat je meer sociale steun ervaart van collega's dan de gemiddelde werknemer."],
+                "offset_vertical":21.645,
+                "offset_horizontal":2.92,
+                "score_offset":6.1,
+                "cutoff_score":[1,2,3,4],
+                "colors":["red", "orange", "yellow", "green"],
+                "min_score":1,
+                "max_score":4
+            },
+            "Functionele steun collegae":{
+                "text":["Je score geeft aan dat je weinig functionele steun ervaart van je collega's.","Je score geeft aan dat je beperkt functionele steun ervaart van je collega's.","Je score geeft aan dat je evenveel funtionele steun ervaart van je collega's als de gemiddelde werknemer.","Je score geeft aan dat je meer functionele steun ervaart van collega's dan de gemiddelde werknemer."],
+                "offset_vertical":14.65,
+                "offset_horizontal":2.92,
+                "score_offset":6.1,
+                "cutoff_score":[1,2,3,4],
+                "colors":["red", "orange", "yellow", "green"],
+                "min_score":1,
+                "max_score":4
+            },
+            "Autonomie":{
+                "text":["Jouw score geeft aan dat je minder invloed op het werk hebt dan de gemiddelde werknemer. Als je bij jezelf merkt dat je behoefte hebt aan meer invloed op het werk is het wellicht verstandig daar eens met jouw leidinggevende over te praten.","Jouw score geeft aan dat je meer invloed op het werk hebt dan de gemiddelde werknemer."],
+                "offset_vertical":7.4,
+                "offset_horizontal":2.92,
+                "score_offset":6.1,
+                "cutoff_score":[1,2.35],
+                "colors":["yellow", "green"],
+                "min_score":1,
+                "max_score":3
+            },
+            "Ongewenst gedrag intern":{
+                "text":["Je geeft aan nooit last te hebben van ongewenst gedrag door internen (collega's en leidinggevende).","Je geeft aan soms last te hebben van ongewenst gedrag door internen (collega's of leidinggevende).","Je geeft aan vaak last te hebben van ongewenst gedrag door internen (collega's of leidinggevende)."],
+                "offset_vertical":21.795,
+                "offset_horizontal":2.81,
+                "score_offset":6.1,
+                "cutoff_score":[0,1.01,2.51],
+                "colors":["green","yellow","red"],
+                "min_score":1,
+                "max_score":4
+            },
+            "Ongewenst gedrag extern":{
+                "text":["Je geeft aan helemaal geen last te hebben van ongewenst gedrag door externen (leerlingen, ouders e.d.).","Je geeft aan soms te maken te hebben met ongewenst gedrag door externen (leerlingen, ouders e.d.).","Je geeft aan vaak last te hebben van ongewenst gedrag door externen (leerlingen, ouders e.d.)."],
+                "offset_vertical":14.37,
+                "offset_horizontal":2.81,
+                "score_offset":6.1,
+                "cutoff_score":[0,1.01,2.51],
+                "colors":["green","yellow","red"],
+                "min_score":1,
+                "max_score":4
+            },
+            "Ontwikkelmogelijkheden":{
+                "text":["Je geeft aan dat jouw leidinggevende de ontwikkeling van je kennis en vaardigheden niet stimuleert.",
+                        "Je geeft aan dat jouw leidinggevende de ontwikkeling van je kennis en vaardigheden in beperkte mate stimuleert.",
+                        "Je geeft aan dat jouw leidinggevende de ontwikkeling van je kennis en vaardigheden in grote mate stimuleert."],
+                "offset_vertical":6.88,
+                "offset_horizontal":2.81,
+                "score_offset":6.1,
+                "cutoff_score":[0.5,1.5,2.5],
+                "colors":["red","yellow","green"],
+                "min_score":0.5,
+                "max_score":3.5
+            },
+            "Burn-out klachten":{
+                "text":["Je hebt minder burn-out klachten dan de gemiddelde medewerker.","Je hebt meer burn-out klachten dan de gemiddelde medewerker.","Je hebt veel vaker last van burn-out klachten dan de gemiddelde medewerker."],
+                "offset_vertical":22.10,
+                "offset_horizontal":2.81,
+                "score_offset":6.2,
+                "cutoff_score":[1,2.03,3.21],
+                "colors":["green","yellow","red"],
+                "min_score":1,
+                "max_score":7
+            },
+            "Bevlogenheid":{
+                "text":["Jouw score op bevlogenheid is lager dan die van de gemiddelde medewerker.","Jouw score op bevlogenheid is hoger dan de gemiddelde medewerker."],
+                "offset_vertical":14.89,
+                "offset_horizontal":2.81,
+                "score_offset":6.2,
+                "cutoff_score":[0,5.53],
+                "colors":["yellow","green"],
+                "min_score":1,
+                "max_score":7
+            },
+            "Tevredenheid":{
+                "text":["Je bent minder tevreden met jouw werk en arbeidsomstandigheden dan de gemiddelde medewerker.","Je bent meer tevreden met jouw werk en arbeidsomstandigheden dan de gemiddelde medewerker."],
+                "offset_vertical":7.84,
+                "offset_horizontal":2.81,
+                "score_offset":6.2,
+                "cutoff_score":[0,3.79],
+                "colors":["yellow", "green"],
+                "min_score":1,
+                "max_score":5
+            },
+            "Organisatiecultuur":{
+                "text":["In jouw organisatie heerst een open cultuur waar ruimte is om duurzame inzetbaarheid te bespreken.","In jouw organisatie heerst niet altijd een open cultuur waar ruimte is om duurzame inzetbaarheid te bespreken.","In jouw organisatie heerst geen open cultuur en er lijkt geen ruimte om duurzame inzetbaarheid te bespreken."],
+                "offset_vertical":21.24,
+                "offset_horizontal":2.81,
+                "score_offset":6.1,
+                "cutoff_score":[0,2.51,4],
+                "colors":["green", "yellow", "red"],
+                "min_score":1,
+                "max_score":5
+            }
+        },
+        "report_folder":"wemanity",
+        "out_filename":"PSA_Rapport_Neuro_Habits.pdf",
+        "template_link": "https://preview.mailerlite.com/q9y8u7b3r8",
+        "question_dict": "wemanity/questions_en.json"
+    }
+}

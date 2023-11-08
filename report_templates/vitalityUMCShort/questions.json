@@ -1,0 +1,42 @@
+[
+  {
+  "category": "Werkdruk",
+  "items": [
+    {"question": "Hoe vaak komt het voor dat het je echt niet lukt je werk af te krijgen?"},
+    {"question": "Hoe vaak komt het voor dat je, om je werk af te krijgen, je werk minder goed doet dan je eigenlijk zou willen?"}
+  ]
+},
+{
+  "category": "Overuren",
+  "items": [
+    {"question": "Hoeveel overuren maak je gemiddeld per week?"}
+  ]
+},
+{
+  "category": "Autonomie",
+  "items": [
+    {"question": "Kun je zelf beslissen hoe je het werk uitvoert?"},
+    {"question": "Bepaal je zelf de volgorde van je werkzaamheden?"},
+    {"question": "Kun je zelf je werktempo bepalen?"},
+    {"question": "Moet je in je werk zelf oplossingen bedenken om bepaalde dingen te doen?"},
+    {"question": "Kun je verlof opnemen wanneer je dat wilt?"},
+    {"question": "Kun je zelf bepalen op welke tijden je werkt?"}
+  ]
+},{
+  "category": "Burn-out klachten",
+  "items": [
+    {"question": "Ik voel me emotioneel uitgeput door het werk"},
+    {"question": "Aan het einde van een werkdag voel ik me leeg"},
+    {"question": "Ik voel me moe als ik 's morgens opsta en geconfronteerd word met mijn werk"},
+    {"question": "Het vergt heel veel van mij om de hele dag met mensen te werken"},
+    {"question": "Ik voel me compleet uitgeput door mijn werk"}
+  ]
+},{
+  "category": "Bevlogenheid",
+  "items": [
+    {"question": "Als ik werk voel ik me fit en sterk"},
+    {"question": "Ik ben enthousiast over mijn baan"},
+    {"question": "Ik ga helemaal op in mijn werk"}
+  ]
+}
+]

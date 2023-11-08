@@ -1,27 +1,15 @@
 from classes.PDF import *
 import sys
-import numpy as np
-
 sys.path.append('../functions')
 from functions.function import *
-from reportlab.platypus import Paragraph, Frame
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.colors import Color
-
-custom_style = ParagraphStyle('custom_style',
-                              fontName="Montserrat-Medium",
-                              fontSize=10,
-                              textColor=Color(0, 0, 0, 1)
-                              )
-
+import numpy as np
 
 class Education(PDF):
     def __init__(self,
                  attrs,
-                 person=None):
+                 person = None):
 
         self.attrs = attrs
-        self.variables_in_order = ['Autonomie', 'Controle', 'Competentie', 'Relatie']
 
         for k, v in self.attrs.items():
             setattr(self, k, v)
@@ -29,7 +17,9 @@ class Education(PDF):
     def init_super(self):
         PDF.__init__(self,
                      self.attrs,
-                     person=self.person
+                     person = self.person,
+                     min_score = 0,
+                     max_score = 16
                      )
 
     def create_scores_list(self,
@@ -38,23 +28,26 @@ class Education(PDF):
 
         scores_list = []
         for variable in variables:
-            print(variable)
             scores_list.append(getattr(person, variable))
 
         return scores_list
 
     def create_canvas(self):
-        x_leftAlign = -(self.doc_center / 2)
         font_folder = str(Path("", "fonts"))
         pdfmetrics.registerFont(TTFont('Montserrat-SemiBold', Path(font_folder,'Montserrat-SemiBold.ttf')))
 
+        rotate = False
+        scores_list = self.create_scores_list(self.person, self.variables_in_order)
+
         score_percentages = np.array([])
         for i in range(len(self.variables_in_order)): # For every variable
-            subject = self.variables_in_order[i]
-            sub_attrs = self.page_attrs[subject]
+            rotate = False
+            if self.variables_in_order[i] in ['autonomie', 'competentie', 'relatie']:
+                print("rotating")
+                rotate = True
 
-            perc = percentage_from_score(sub_attrs['min_score'],sub_attrs['max_score'], getattr(self.person, subject), rotate=True)
-            print(f"Percentage for score {subject}: {perc}")
+            perc = percentage_from_score(self.min_score, self.max_score, scores_list[i], rotate=rotate)
+            print(f"Percentage for score {self.variables_in_order[i]}: {perc}")
 
             score_percentages = np.append(score_percentages, perc)
 
@@ -62,16 +55,14 @@ class Education(PDF):
 
         c, existing_pdf = self.prep_pdf(report_filename, pages)
         c.showPage()
-
-        for i in range(len(self.variables_in_order)):
-            sub_attrs = self.page_attrs[self.variables_in_order[i]] # Page attributes of current subject
-
+        for i in range(len(self.offset_vertical)):
             self.draw_score(c,
-                            sub_attrs['score_offset'],
-                            x_leftAlign + sub_attrs['offset_horizontal'],
+                            self.score_offset[i],
+                            self.offset_horizontal[i],
                             score_percentages[i],
-                            sub_attrs['offset_vertical'],
-                            height=42)
+                            self.offset_vertical[i],
+                            height = 42,
+                            bias = False)
 
         textobject = c.beginText(1.9*cm, 6*cm)
         textobject.setFont('Montserrat-SemiBold', 13)
@@ -119,52 +110,53 @@ class Education(PDF):
         print("Vars to be removed:")
         print(remaining_vars)
 
-        if "Autonomie" in remaining_vars and "Controle" in remaining_vars:
+        if "autonomie" in remaining_vars and "controle" in remaining_vars:
             pages.remove(autonomie_page)
 
-        if "Relatie" in remaining_vars:
+        if "relatie" in remaining_vars:
             pages.remove(relatie_page)
 
-        if "Competentie" in remaining_vars:
+        if "competentie" in  remaining_vars:
             pages.remove(competentie_page)
 
         print(score_percentages)
         print(pages)
 
         # This code compares the original list with the list of remaining vars and keeps the non-intersecting vars
-        # vars_for_text = list(set(remaining_vars).symmetric_difference(self.variables_in_order))
-        vars_for_text = [i for i in self.variables_in_order if i not in remaining_vars]
+        vars_for_text = list(set(remaining_vars).symmetric_difference(self.variables_in_order))
         print("Vars for text")
         print(vars_for_text)
 
         txt = ""
         cnt = 0
-        total_vars = len(vars_for_text)
 
-        for var in range(total_vars):
+        for var in range(len(vars_for_text)):
             if cnt == 0:
                 txt += vars_for_text[var]
-            elif cnt == 1 or cnt == 2:
-                if total_vars == 2:
-                    txt += " en " + vars_for_text[var]
-                else:
-                    txt += ", " + vars_for_text[var]
+            elif cnt == 1:
+                txt += ", " + vars_for_text[var]
+            elif cnt == 2:
+                txt += ", " + vars_for_text[var]
             elif cnt == 3:
                 txt += ", en " + vars_for_text[var]
 
             cnt += 1
 
         add_text = None
-        txt = txt.lower()
         txt_end = txt
-
         if 'controle' in txt:
             add_text = "Controle is een specifiek onderwerp binnen autonomie.\n"
 
-            txt_end = txt_end.replace(" en controle", "")
-            txt_end = txt_end.replace(", controle,", ",")
-            txt_end = txt_end.replace(", controle, en", " en")
+            if 'autonomie' in txt:
+                txt_end = txt_end.replace(" autonomie,", "")
+                txt_end = txt_end.replace(", autonomie", "")
+                txt_end = txt_end.replace(", en autonomie", "")
 
+            txt_end = txt_end.replace(" controle,", "autonomie,")
+            txt_end = txt_end.replace(", controle", ", autonomie")
+            txt_end = txt_end.replace(", en controle", ", en autonomie")
+
+        print(txt)
         results_text = f"""Uit de resultaten blijkt dat je ontwikkelingspotentie het grootst is \nop het gebied van {txt}. \n{add_text}Op de volgende pagina kun je alvast wat informatie en tips \nvinden om zelf aan de slag te gaan met het ondersteunen \nvan {txt_end}.
         """
 

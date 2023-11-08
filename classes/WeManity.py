@@ -2,11 +2,9 @@ from classes.PDF import *
 import sys
 sys.path.append('../functions')
 from functions.function import *
-from reportlab.platypus import Paragraph, Frame, Spacer
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.colors import Color, black, blue, red
-from reportlab.lib.pagesizes import A4
-import numpy as np
+from reportlab.platypus import Paragraph, Frame
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.colors import Color
 
 custom_style = ParagraphStyle('custom_style',
                               fontName="Montserrat-Medium",
@@ -15,7 +13,7 @@ custom_style = ParagraphStyle('custom_style',
                               )
 
 
-class VitalityIchtus(PDF):
+class WeManity(PDF):
     def __init__(self,
                  attrs,
                  person = None):
@@ -61,8 +59,8 @@ class VitalityIchtus(PDF):
         pdfmetrics.registerFont(TTFont('Montserrat-Regular', Path(font_folder,'Montserrat-Regular.ttf')))
         pdfmetrics.registerFont(TTFont('Montserrat-Medium', Path(font_folder,'Montserrat-Medium.ttf')))
 
-        report_filename = "PSA rapport vitaliteit V.2"
-        pages = range(10)
+        report_filename = "PSA microrapport zakelijke dienstverlening"
+        pages = range(9)
 
         height = 19
 
@@ -406,7 +404,6 @@ class VitalityIchtus(PDF):
         frame.addFromList(story,c)
 
         c.showPage() # Organisatiecultuur
-        c.showPage()
         c.showPage()
         c.showPage()
 

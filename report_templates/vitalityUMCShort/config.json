@@ -1,0 +1,61 @@
+{
+    "class_name":"Vitality UMC Short",
+    "class_attrs":{
+        "page_attrs":{
+            "Werkdruk":{
+                "text":["Je geeft aan dat je altijd of meestal je werk af krijgt, en dat je nooit of niet vaak je werk minder goed doet dan je eigenlijk zou willen, om het werk af te krijgen. Dit wijst op een lage werkdruk.", "Je geeft aan dat het je soms niet lukt om je werk af te krijgen, en dat je soms je werk minder goed doet dan je eigenlijk zou willen, om het werk af te krijgen. Dit wijst op een enigszins hoge werkdruk.", "Je geeft aan dat je je werk vaak of nooit afkrijgt, en dat je vaak of altijd je werk minder goed doet dan je eigenlijk zou willen, om het werk af te krijgen. Dit wijst op een hoge werkdruk."],
+                "offset_vertical":22.14,
+                "offset_horizontal":3.13,
+                "score_offset":6,
+                "cutoff_score":[1,2,3],
+                "colors":["green", "yellow", "red"],
+                "min_score":1,
+                "max_score":4
+            },
+            "Overuren":{
+                "text":["Dit is het aantal overuren dat je gemiddeld per week maakt. Gemiddeld geven Nederlanders aan dat zij 3 overuren per week maken."],
+                "offset_vertical":15.08,
+                "offset_horizontal":3.13,
+                "score_offset":6.59,
+                "cutoff_score":[0],
+                "colors":["grey"],
+                "min_score":0,
+                "max_score":11
+            },
+            "Autonomie":{
+                "text":["Jouw score geeft aan dat je minder invloed op het werk hebt dan de gemiddelde werknemer. Als je bij jezelf merkt dat je behoefte hebt aan meer invloed op het werk is het wellicht verstandig daar eens met jouw leidinggevende over te praten.","Jouw score geeft aan dat je meer invloed op het werk hebt dan de gemiddelde werknemer."],
+                "offset_vertical":7.4,
+                "offset_horizontal":2.92,
+                "score_offset":6.1,
+                "cutoff_score":[1,2.35],
+                "colors":["yellow", "green"],
+                "min_score":1,
+                "max_score":3
+            },
+            "Burn-out klachten":{
+                "text":["Je hebt minder burn-out klachten dan de gemiddelde medewerker.","Je hebt meer burn-out klachten dan de gemiddelde medewerker.","Je hebt veel vaker last van burn-out klachten dan de gemiddelde medewerker."],
+                "offset_vertical":22.10,
+                "offset_horizontal":2.81,
+                "score_offset":6.2,
+                "cutoff_score":[1,2.03,3.21],
+                "colors":["green","yellow","red"],
+                "min_score":1,
+                "max_score":7
+            },
+            "Bevlogenheid":{
+                "text":["Jouw score op bevlogenheid is lager dan die van de gemiddelde medewerker.","Jouw score op bevlogenheid is hoger dan de gemiddelde medewerker."],
+                "offset_vertical":14.89,
+                "offset_horizontal":2.81,
+                "score_offset":6.2,
+                "cutoff_score":[0,5.53],
+                "colors":["yellow","green"],
+                "min_score":1,
+                "max_score":7
+            }
+        },
+        "report_folder":"vitalityUMCShort",
+        "report_filename_in": "PSA rapport ziekenhuizen PSA rapport ziekenhuizen KORTE versie",
+        "out_filename":"PSA_Rapport_Neuro_Habits.pdf",
+        "question_dict": "vitalityUMCShort/questions.json"
+    }
+}

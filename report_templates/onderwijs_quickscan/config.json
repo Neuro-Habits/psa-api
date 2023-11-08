@@ -1,0 +1,41 @@
+{
+    "class_name":"Education Quickscan",
+    "class_attrs":{
+        "page_attrs":{
+            "Autonomie":{
+                "offset_vertical":20.2,
+                "offset_horizontal":1.85,
+                "score_offset":11.85,
+                "cutoff_score":[0, 2.33, 4],
+                "colors":["green", "yellow", "red"],
+                "min_score":1,
+                "max_score":5
+            },
+            "Controle":{
+                "offset_vertical":15.98,
+                "offset_horizontal":1.85,
+                "score_offset":11.85,
+                "min_score":1,
+                "max_score":5
+            },
+            "Relatie":{
+                "offset_vertical":11.72,
+                "offset_horizontal":1.85,
+                "score_offset":11.85,
+                "min_score":1,
+                "max_score":5
+            },
+            "Competentie":{
+                "offset_vertical":7.54,
+                "offset_horizontal":1.85,
+                "score_offset":11.85,
+                "min_score":1,
+                "max_score":5
+            }
+        },
+        "report_folder": "onderwijs_quickscan",
+        "out_filename": "Rapport Quickscan.pdf",
+        "template_link": "https://preview.mailerlite.com/o3u9q3",
+        "question_dict": "onderwijs_quickscan/questions.json"
+    }
+}

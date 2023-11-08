@@ -15,7 +15,7 @@ custom_style = ParagraphStyle('custom_style',
                               )
 
 
-class VitalityIchtus(PDF):
+class VitalityUMCLong(PDF):
     def __init__(self,
                  attrs,
                  person = None):
@@ -61,12 +61,11 @@ class VitalityIchtus(PDF):
         pdfmetrics.registerFont(TTFont('Montserrat-Regular', Path(font_folder,'Montserrat-Regular.ttf')))
         pdfmetrics.registerFont(TTFont('Montserrat-Medium', Path(font_folder,'Montserrat-Medium.ttf')))
 
-        report_filename = "PSA rapport vitaliteit V.2"
         pages = range(10)
 
         height = 19
 
-        c, existing_pdf = self.prep_pdf(report_filename, pages)
+        c, existing_pdf = self.prep_pdf(self.report_filename_in, pages)
         c.showPage()
         c.showPage()
 
