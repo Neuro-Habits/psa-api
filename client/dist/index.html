@@ -1,0 +1,210 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <base href="/">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+  <div>
+    <div id="imageDiv">
+      <img src="https://www.neurohabits.nl/wp-content/uploads/elementor/thumbs/NH-transparant-wit-osseuy3vzvj7pijne27i9movu62lp5hrl2t0q76l8g.png">
+    </div>
+    <h1 id="mainText">
+      <span id="text-info1">Je rapport is aan het laden. Dit duurt ongeveer een minuut. Blijf op deze pagina, dit is de enige manier om je rapport te downloaden.</span>
+      <br><br><br>
+      <span id="text-info2">Zodra je rapport klaar is om te downloaden wordt de downloadknop hieronder groen.</span>
+    </h1>
+    <div id="centerButton">
+      <button class="button-24" id="redirectButton" disabled>Download mijn persoonlijke verslag</button>
+    </div>
+  </div>
+
+  <script src="js/vendor/modernizr-3.11.2.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+  <style>
+  html {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  body {
+    flex:1;
+    background: #466381;
+  }
+
+  #mainText{
+    font-family: 'Montserrat';
+    font-weight: 300;
+    text-align: center;
+    color: white;
+    padding: 1% 15% 2% 15%;
+    line-height: 1em;
+    font-size: 2em;
+  }
+
+  #imageDiv img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 20%;
+  }
+
+  #imageDiv{
+    margin-top: 2%;
+  }
+
+  #centerButton #redirectButton{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /* width: 30%;
+    display: none; */
+  }
+
+  /* CSS */
+  .button-24 {
+    background: #3ec1a5;
+    border: 1px solid #3ec1a5;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Montserrat",sans-serif;
+    font-weight: 900;
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 24px 28px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+  }
+
+  .button-24:hover:not(:disabled),
+  .button-24:active:not(:disabled) {
+    background-color: initial;
+    background-position: 0 0;
+    color: #3ec1a5;
+    border-color: #3ec1a5;
+  }
+
+  .button-24:active:not(:disabled) {
+    opacity: .5;
+  }
+
+  .button-24:disabled {
+    background: lightgray;
+    border-color: lightgray;
+    opacity: 0.3;
+    cursor:not-allowed;
+  }
+  </style>
+  <script>
+  var path = window.location.pathname.split("/en")
+  if (path.length == 2){
+    document.getElementById("text-info1").innerText = "The report is loading. This will take about a minute. Please stay on this page, this is the only way to download your report.";
+    document.getElementById("text-info2").innerText = "Once your report is ready for download, the download button below will turn green.";
+    document.getElementById("redirectButton").innerText = "Download my personal report"
+
+    path = path[1]
+  }
+  else {
+    path = path[0]
+  }
+  var protocol = "https://"
+  // var host = window.location.hostname
+  var host = "nh-psa-api.s3.eu-central-1.amazonaws.com" // report location url
+  var url = protocol+host+path
+
+  console.log(url)
+
+  var createCORSRequest = function(method, url) {
+      var xhr = new XMLHttpRequest();
+      if ("withCredentials" in xhr) {
+          // Most browsers.
+          xhr.open(method, url, true);
+      } else if (typeof XDomainRequest != "undefined") {
+          // IE8 & IE9
+          xhr = new XDomainRequest();
+          xhr.open(method, url);
+      } else {
+          // CORS not supported.
+          xhr = null;
+      }
+      return xhr;
+  };
+
+  var method = 'GET';
+  var openWindow = function(fromButton = false){
+    var xhr = createCORSRequest(method, url);
+
+    xhr.onload = function() {
+      status = xhr.status
+      console.log('DONE: ', status);
+
+      if (status != 200){
+        console.log("Document not ready yet");
+      }
+      else{
+        if (fromButton){
+          window.open(url, '_blank');
+        }
+        else{
+          console.log("Clearing interval")
+          clearInterval(checkTarget);
+
+          // Making button visible
+          document.getElementById('redirectButton').disabled = false;
+        }
+      }
+    };
+
+    xhr.onerror = function() {
+      console.log("Error")
+    };
+
+    xhr.send();
+  }
+
+
+  openWindow();
+
+  // Run some loop in async function
+  const checkTarget = setInterval(openWindow, 5000);
+
+  document.getElementById("redirectButton").onclick = function() {
+    console.log("clicked!")
+    openWindow(true);
+  };
+  </script>
+</body>
+</html>
